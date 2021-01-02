@@ -1,4 +1,5 @@
 import axios from "axios";
+// ADD TRY CATCHES TO ALL API CALLS
 
 export const getCredentials = async () => {
     const client_id = process.env.REACT_APP_BANDCAMP_CLIENT_ID;
@@ -6,7 +7,7 @@ export const getCredentials = async () => {
     const dataType = "json";
     const grant_type = "client_credentials";
     const credentials = await axios.post(
-      `https://bandcamp.com/oauth_token`,
+      `/oauth_token`,
       null,
       {
         params: {
@@ -28,7 +29,7 @@ export const getBands = async (token) => {
       key: "value",
     };
     const getBands = await axios.post(
-      "https://bandcamp.com/api/account/1/my_bands",
+      "/api/account/1/my_bands",
       bodyParameters,
       config
     );
@@ -44,7 +45,7 @@ export const getOrdersUnshipped = async (token, bands) => {
       unshipped_only: true,
     };
     const allOrders = await axios.post(
-      "https://bandcamp.com/api/merchorders/3/get_orders",
+      "/api/merchorders/3/get_orders",
       paramTest,
       config
     );
@@ -57,14 +58,14 @@ export const getAllRecentOrders = async (token, bands) => {
     };
     const oneMonthsAgo = new Date();
     oneMonthsAgo.setMonth(oneMonthsAgo.getMonth() - 1);
-    const recentDateFrom = `${await oneMonthsAgo.getFullYear()}-${await oneMonthsAgo.getMonth()}-01`
+    const recentDateFrom = `${oneMonthsAgo.getFullYear()}-${oneMonthsAgo.getMonth()}-01`
     
     const paramTest = {
       band_id: bands.data.bands[2].band_id,
       start_time: recentDateFrom
     };
     const allRecentOrders = await axios.post(
-      "https://bandcamp.com/api/merchorders/3/get_orders",
+      "/api/merchorders/3/get_orders",
       paramTest,
       config
     );

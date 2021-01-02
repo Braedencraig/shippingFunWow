@@ -1,9 +1,12 @@
 import axios from "axios";
+// ADD TRY CATCHES TO ALL API CALLS
+
+const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET
 
 export const chitChatsInit = async () => {
-    const res = await axios.get('https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/608245/shipments' , {
+    const res = await axios.get('/clients/608245/shipments' , {
         headers: {
-            Authorization: "t8z4t153n3w3a8z4d6i8p6w7w5"
+            Authorization: chitChatTkn
         }})
     return res
 }
@@ -54,13 +57,12 @@ export const createShipment = async (orderToBeShipped) => {
     // change rest based on vinyl or other
     console.log(shipmentBody)
 
-    const res = await axios.post('https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/608245/shipments',
+    const res = await axios.post('/clients/608245/shipments',
     shipmentBody,
      {
         headers: {
-            Authorization: "t8z4t153n3w3a8z4d6i8p6w7w5"
+            Authorization: chitChatTkn
         }
     })
-    // successful response with a shipment created 201.
     return res
 }
