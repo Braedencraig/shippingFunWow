@@ -3,16 +3,7 @@ import axios from "axios";
 
 const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET
 
-export const chitChatsInit = async () => {
-    const res = await axios.get('/clients/608245/shipments' , {
-        headers: {
-            Authorization: chitChatTkn
-        }})
-    return res
-}
-
 export const createShipment = async (orderToBeShipped) => {
-    console.log(orderToBeShipped)
     const {ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country_code, ship_to_zip, buyer_phone,  buyer_email, sub_total, currency, paypal_id} = orderToBeShipped
 
     const postageType = () => {
@@ -54,8 +45,7 @@ export const createShipment = async (orderToBeShipped) => {
         postage_type: postage
     }
     // weight is 0.6 + # recs x 0.6 NEED TO SEE WHAT THIS LOOKS LIKE
-    // change rest based on vinyl or other
-    console.log(shipmentBody)
+    // change rest based on vinyl or other GO BACK TO MVP AND LOOK AT WHAT IS NEEDED
 
     const res = await axios.post('/clients/608245/shipments',
     shipmentBody,
@@ -64,5 +54,13 @@ export const createShipment = async (orderToBeShipped) => {
             Authorization: chitChatTkn
         }
     })
+    console.log(res.data.shipment.id)
+
+    const test = await axios.patch(`/clients/608245/shipments/${res.data.shipment.id}/buy`, null, {
+        headers: {
+            Authorization: chitChatTkn
+        }
+    })
+    console.log(test)
     return res
 }
