@@ -15,11 +15,6 @@ const styles = StyleSheet.create({
   }
 });
 
-
-
-
-
-
 // Create Document Component
 const PdfGenerator = () => {
 

@@ -48,6 +48,7 @@ function App() {
           <h2>Orders To Be Shipped {unfilledOrders === null ? '' : unfilledOrders.length}</h2>
           {unfilledOrders === null ? ( <img src={Spinner} alt=""/>) : unfilledOrders.map((orderToBeShipped, idx) => { 
             {console.log(unfilledOrders.length)}
+            // PASS THE CHECKBOX TOTAL SELECT DOWN AS PROPS HERE?
             return (
                 <Card idx={idx} orderToBeShipped={orderToBeShipped} />
             )
