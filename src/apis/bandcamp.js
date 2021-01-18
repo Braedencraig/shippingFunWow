@@ -74,6 +74,8 @@ export const getAllRecentOrders = async (token, bands) => {
 
 export const markAsShipped = async (token, orderToBeShipped, trackingUrl) => {
   // THIS WORKS DONT USE BECAUSE IT FUCKS SHIT UP, ask alex to make a bunch of fake orders so I can mark as shipped?!?!?!?!
+  // WHEN inducted/released, click buttton that takes all orders that are received and then markAsShipped, inducted on clikc, then send mark as shipped.
+  // 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };

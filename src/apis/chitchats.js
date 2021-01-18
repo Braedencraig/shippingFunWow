@@ -6,19 +6,21 @@ const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID_STAGING
 
 export const createShipment = async (orderToBeShipped) => {
     const {ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country_code, ship_to_zip, buyer_phone,  buyer_email, sub_total, currency, paypal_id} = orderToBeShipped
+    // make this dynamic based on what items and how many 0.6 is base each record 0.6,
+    // new sizing dimension for if your shipping clothing.
 
     const postageType = () => {
         if(ship_to_country_code === 'CA') {
-            // currently having issues on staging with this postage type
             return "chit_chats_canada_tracked"
         } else if(ship_to_country_code === 'US') {
-            // currently having issues on staging with this postage type
             return "usps_media_mail"
         } else {
             return "asendia_priority_tracked"
         }
     }
+    // EDGE CHASE INTERNATIONAL ONLY
     const postage = postageType()
+
 
     const shipmentBody = {
         name: ship_to_name,
@@ -60,17 +62,43 @@ export const createShipment = async (orderToBeShipped) => {
 
     return {
         id: res.data.shipment.id,
-        tracking: res.data.shipment.tracking_url
+        tracking: res.data.shipment.tracking_url,
+        rates: res.data.shipment.rates
     }
 }
 
-export const buyShipment = async (shipmentId) => {
-    const res = await axios.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, null, {
+export const getShipment = async (id) => {
+    const res = await axios.get(`/clients/${chitChatClientId}/shipments/${id}`, {
         headers: {
             Authorization: chitChatTkn
-        }
-    })
+        }  
+    });
     if(res.status === 200) {
-        return true
+        return res
+    }
+}
+
+export const buyShipment = async (shipmentId, postageType = null) => {
+    if(postageType === null) {
+        const res = await axios.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, null, {
+            headers: {
+                Authorization: chitChatTkn
+            }
+        })
+        if(res.status === 200) {
+            return true
+        }
+    } else {
+        const params = {
+            postage_type: postageType
+        }
+        const res = await axios.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, params, {
+            headers: {
+                Authorization: chitChatTkn
+            }
+        })
+        if(res.status === 200) {
+            return true
+        }
     }
 }
