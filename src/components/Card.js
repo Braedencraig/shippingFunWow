@@ -67,8 +67,8 @@ const Card = ({ idx, pdf, orderToBeShipped, orderToBeShipped: { ship_to_country_
             // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
         }}>Create & Buy Shipment</button>
         <input onChange={() => {
-            // aDJUST THIS TOGGLE and create A OVERALL TOGGLE SELECT FROM THE APP LEVEL, find all and select, and in these components, if seleeceted ru
             setToggle(prevState => !prevState)
+            console.log('ITS HAPPENING')
             console.log(!toggle)
         }} type="checkbox" id="createShipment" name="createShipment" value="createShipment" />
         <label for="createShipment">Create Shipment</label>

@@ -12,9 +12,12 @@ const Button = () => {
 
     let todo = useStoreState((state) => state.pngs.urls);
     let todoInfo = useStoreState((state) => state.pngs.info);
-
+    let checkboxes = document.getElementsByName('createShipment')
+    // MAP OVER THE CHECKBOXES HERE TO SELECT ALL select all checkboxes and deal with that in card, check if checked?!
+    console.log(checkboxes)
     console.log(todo)
     console.log(todoInfo)
+
     // WE WILL GENERATE THE PDF FOR DOWNLOAD INSIDE OF THIS COMPONENT
     return (
         <button onClick={() => {
