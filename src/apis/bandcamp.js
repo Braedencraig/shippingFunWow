@@ -1,5 +1,6 @@
 import axios from "axios";
 // ADD TRY CATCHES TO ALL API CALLS
+// handle the 400 bad request here to call again
 
 export const getCredentials = async () => {
     const client_id = process.env.REACT_APP_BANDCAMP_CLIENT_ID;

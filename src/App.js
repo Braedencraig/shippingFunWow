@@ -12,7 +12,7 @@ require('dotenv').config()
 
 function App() {
   const [unfilledOrders, setUnfilledOrders] = useState(null)
-  const [token, setToken] = useState('')
+  const [confirmCreateShipment, setConfirmCreateShipment] = useState(false)
 
   const store = createStore({
     pngs: {
@@ -27,14 +27,11 @@ function App() {
     },
   });
 
-
   useEffect(() => {
     async function fetchData() {
       const clientCreds = await getCredentials();
       const accessTkn = clientCreds?.data.access_token;
-      setToken(accessTkn)
       const bands = await getBands(accessTkn);
-     
       const ordersUnshipped  = await getOrdersUnshipped(accessTkn, bands)
       setUnfilledOrders(ordersUnshipped?.data.items)
     }
@@ -45,19 +42,20 @@ function App() {
     <div className="App">
       <StoreProvider store={store}>
         <div className="toBeShipped">
-          <h2>Orders To Be Shipped {unfilledOrders === null ? '' : unfilledOrders.length}</h2>
+          <h2>Orders To Be Shipped: {unfilledOrders === null ? '' : unfilledOrders.length}</h2>
+          <h3>Create and purchsed shipments for all orders below in chitchats</h3>
+          <button onClick={() => {
+            const result = window.confirm('Are you sure?')
+            setConfirmCreateShipment(result)
+          }}>CLICK HERE</button>
+
           {unfilledOrders === null ? ( <img src={Spinner} alt=""/>) : unfilledOrders.map((orderToBeShipped, idx) => { 
-            {console.log(unfilledOrders.length)}
-            // PASS THE CHECKBOX TOTAL SELECT DOWN AS PROPS HERE?
             return (
-                <Card idx={idx} orderToBeShipped={orderToBeShipped} />
+                <Card idx={idx} orderToBeShipped={orderToBeShipped} confirmCreateShipment={confirmCreateShipment} />
             )
           })}
           <Button />
           {/* <PdfGenerator /> */}
-          {/* <button onClick={() => {
-            console.log(todos)
-          }}>dadasdads</button> */}
           {/* <PDFDownloadLink document={<PdfGenerator />} fileName="somename.pdf">
             {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
           </PDFDownloadLink> */}

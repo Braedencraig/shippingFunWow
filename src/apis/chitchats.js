@@ -5,9 +5,12 @@ const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET_STAGING
 const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID_STAGING
 
 export const createShipment = async (orderToBeShipped) => {
-    const {ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country_code, ship_to_zip, buyer_phone,  buyer_email, sub_total, currency, paypal_id} = orderToBeShipped
+    const {ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country_code, ship_to_zip, buyer_phone,  buyer_email, sub_total, currency, paypal_id} = await orderToBeShipped
     // make this dynamic based on what items and how many 0.6 is base each record 0.6,
     // new sizing dimension for if your shipping clothing.
+    // change rest based on vinyl or other GO BACK TO MVP AND LOOK AT WHAT IS NEEDED
+
+
 
     const postageType = () => {
         if(ship_to_country_code === 'CA') {
@@ -18,9 +21,7 @@ export const createShipment = async (orderToBeShipped) => {
             return "asendia_priority_tracked"
         }
     }
-    // EDGE CHASE INTERNATIONAL ONLY
     const postage = postageType()
-
 
     const shipmentBody = {
         name: ship_to_name,
@@ -49,8 +50,6 @@ export const createShipment = async (orderToBeShipped) => {
         ship_date: "today",
         postage_type: postage
     }
-    // weight is 0.6 + # recs x 0.6 NEED TO SEE WHAT THIS LOOKS LIKE
-    // change rest based on vinyl or other GO BACK TO MVP AND LOOK AT WHAT IS NEEDED
 
     const res = await axios.post(`/clients/${chitChatClientId}/shipments`,
     shipmentBody,
@@ -63,7 +62,8 @@ export const createShipment = async (orderToBeShipped) => {
     return {
         id: res.data.shipment.id,
         tracking: res.data.shipment.tracking_url,
-        rates: res.data.shipment.rates
+        rates: res.data.shipment.rates,
+        name: ship_to_name
     }
 }
 
@@ -75,6 +75,9 @@ export const getShipment = async (id) => {
     });
     if(res.status === 200) {
         return res
+    } else {
+        console.log('HERERERE')
+        return false
     }
 }
 

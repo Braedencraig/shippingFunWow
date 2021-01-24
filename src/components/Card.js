@@ -5,25 +5,59 @@ import { createShipment, buyShipment, getShipment } from '../apis/chitchats'
 import PropTypes from 'prop-types'
 
 
-const Card = ({ idx, pdf, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
+const Card = ({ confirmCreateShipment, idx, pdf, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
     const [rates, setRates] = useState([])
     const [shipId, setShipId] = useState('')
-    const [shipmentPurchased, setShipmentPurchased] = useState(false)
-    const [png, setPng] = useState(null)
-    const [toggle, setToggle] = useState(false)
+    const [name, setName] = useState('')
+    const [invalidRate, setInvalidRate] = useState(false)
 
-    const add = useStoreActions((actions) => actions.pngs.add);
-    const addInfo = useStoreActions((actions) => actions.pngs.addInfo);
-    useEffect(() => {
-        if(png !== null) {
-            addInfo(orderToBeShipped)
-            add(png)
+    const add = useStoreActions((actions) => actions.pngs.add)
+    const addInfo = useStoreActions((actions) => actions.pngs.addInfo)
+
+    const createShipmentFunc = async (orderToBeShipped) => {
+        let namesOfRates = []
+        const shipment = await createShipment(orderToBeShipped)
+        shipment.rates.map(rate => namesOfRates.push(rate.postage_type))
+        const hasAsendia = namesOfRates.includes('asendia_priority_tracked')
+        setShipId(shipment.id)
+
+        if(!isNorthAmerica && !hasAsendia) {
+            setInvalidRate(true)
+            setRates(shipment.rates)
         }
-    }, [setRates, setShipId, setPng, png])
+
+        if(shipment.id) {
+            // Include the setTimeout to wait for chitchats, async await fails w 400 on patch
+            // COULD REFACTOR THE INSIDE TO ASYNC AWAIT
+            setTimeout(() => {
+                const shipmentBought = buyShipment(shipment.id)
+                shipmentBought.then(res => {
+                    if(res) {
+                        setTimeout(() => {
+                            const getShipmentInfo = getShipment(shipment.id)
+                            getShipmentInfo.then(info => {
+                                console.log(info.data.shipment.postage_label_png_url)
+                                add(info.data.shipment.postage_label_png_url)
+                            })
+                        }, 10000)
+                    }
+                })
+            }, 9000)
+        }
+    }
+
+    useEffect(() => {
+        setName(ship_to_name)
+        if(name && confirmCreateShipment) {
+            createShipmentFunc(orderToBeShipped)
+            addInfo(orderToBeShipped)
+        }
+    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate])
 
     const isNorthAmerica = ship_to_country_code === 'CA' || ship_to_country_code === 'US'
+
     return (
-        <div key={idx} className={`order`}>
+        <div key={idx} className={`order ${confirmCreateShipment && !invalidRate ? 'selected' : 'error'}`}>
         <p>Name: {ship_to_name}</p>
         <p>Address: {ship_to_street}</p>
         {ship_to_street_2 !== null ?  <p>Address2: {ship_to_street_2}</p> : '' }
@@ -33,45 +67,10 @@ const Card = ({ idx, pdf, orderToBeShipped, orderToBeShipped: { ship_to_country_
         <p>Zip-Postal: {ship_to_zip}</p>
         <p>Phone: {buyer_phone}</p>
         <p>Email: {buyer_email}</p>
-        <div>{shipmentPurchased ? 'PURCHASED' : 'NOT PURCHASED'}</div>
-        {!isNorthAmerica ? <ShipmentRates shipId={shipId} rates={rates} /> : ''}
-        <button className="btn" onClick={async (e) => {
-            // can use e to style
-            let namesOfRates = []
-            const shipment = await createShipment(orderToBeShipped)
-            shipment.rates.map(rate => namesOfRates.push(rate.postage_type))
-            const hasAsendia = namesOfRates.includes('asendia_priority_tracked')
-            setShipId(shipment.id)
-            // NEED SLOVENIAN USER TO TEST THIS
-            if(!isNorthAmerica && !hasAsendia) {
-                setRates(shipment.rates)
-            }
-            const shipmentBought = await buyShipment(shipment.id)
-            if(shipmentBought) {
-                setShipmentPurchased(true)
-                // setTimeout necessary here to wait for the chitchats api to create the png
-                setTimeout(() => {
-                    const getShipmentInfo = getShipment(shipment.id)
-                    getShipmentInfo.then(res => {
-                        console.log(orderToBeShipped)
-                        setPng(res.data.shipment.postage_label_png_url)
-                    })
-                }, 5000)
-            }
-            // NAME OF ITEM AND QUANTITY on other 
-            // ADD CHECKBOX FUNCTIONALITY, SELECT ALL PREPARE FOR SHIPPING, or leave as is and click each individual to prepare.
-            // CREATE PDFS
-            // select all and print, file cue for all pdfs! so one click.
-            // ORDERS TO GET MULLTIPLE ITEMS AND VARIATIONS
-            // FIRE THIS 24 HOURS AFTER, easiest way, instead of when flag has changed in CC
+        {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''}
+        {/* <button className="btn" onClick={async (e) => {
             // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
-        }}>Create & Buy Shipment</button>
-        <input onChange={() => {
-            setToggle(prevState => !prevState)
-            console.log('ITS HAPPENING')
-            console.log(!toggle)
-        }} type="checkbox" id="createShipment" name="createShipment" value="createShipment" />
-        <label for="createShipment">Create Shipment</label>
+        }}>Create & Buy Shipment</button> */}
         </div>
     )
 }
