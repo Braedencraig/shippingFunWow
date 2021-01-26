@@ -50,37 +50,40 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
     useEffect(() => {
         setName(ship_to_name)
         if(name && confirmCreateShipment) {
-            // this is soludtion to the buying issue
-            setTimeout(() => {
-                createShipmentFunc(orderToBeShipped)
-                addInfo(orderToBeShipped)
-            }, 3000)
+            createShipmentFunc(orderToBeShipped)
+            addInfo(orderToBeShipped)
         }
     }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading])
 
     const isNorthAmerica = ship_to_country_code === 'CA' || ship_to_country_code === 'US'
 
     console.log(loading, 'USING THIS VARIABLE TO SET LOADING SPINNERS BEFORE CLICKING PDF BUTTON')
+    // FIX THIS SET LOADING STATE FOR ALL CARDS UNTIL READY FOR PDF
+    // THEN FIGURE OUT HOW TO MAKE THOSE BUY CALLS ONE AFTER ANOTHER NOT RUSHHED ON RENDER.
+    if(loading) {
+        return (
+            <img src={Spinner} alt=""/>
+        )
+    } else {
+        return (
+            <div key={idx} className={`order ${confirmCreateShipment && !invalidRate ? 'selected' : 'error'}`}>
+            <p>Name: {ship_to_name}</p>
+            <p>Address: {ship_to_street}</p>
+            {ship_to_street_2 !== null ?  <p>Address2: {ship_to_street_2}</p> : '' }
+            <p>City: {ship_to_city}</p>
+            <p>State/Province: {ship_to_state}</p>
+            <p>Country: {ship_to_country}</p>
+            <p>Zip-Postal: {ship_to_zip}</p>
+            <p>Phone: {buyer_phone}</p>
+            <p>Email: {buyer_email}</p>
+            {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''}
+            {/* <button className="btn" onClick={async (e) => {
+                // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
+            }}>Create & Buy Shipment</button> */}
+            </div>
+        )
+    }
 
-
-
-    return (
-        <div key={idx} className={`order ${confirmCreateShipment && !invalidRate ? 'selected' : 'error'}`}>
-        <p>Name: {ship_to_name}</p>
-        <p>Address: {ship_to_street}</p>
-        {ship_to_street_2 !== null ?  <p>Address2: {ship_to_street_2}</p> : '' }
-        <p>City: {ship_to_city}</p>
-        <p>State/Province: {ship_to_state}</p>
-        <p>Country: {ship_to_country}</p>
-        <p>Zip-Postal: {ship_to_zip}</p>
-        <p>Phone: {buyer_phone}</p>
-        <p>Email: {buyer_email}</p>
-        {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''}
-        {/* <button className="btn" onClick={async (e) => {
-            // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
-        }}>Create & Buy Shipment</button> */}
-        </div>
-    )
 }
 
 Card.propTypes = {

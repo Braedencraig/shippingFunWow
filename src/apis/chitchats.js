@@ -91,6 +91,14 @@ export const buyShipment = async (shipmentId, postageType = null) => {
         if(res.status === 200) {
             return true
         }
+        if(res.status === 400) {
+            const res = await axios.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, null, {
+                headers: {
+                    Authorization: chitChatTkn
+                }
+            })
+            return true
+        }
     } else {
         const params = {
             postage_type: postageType
