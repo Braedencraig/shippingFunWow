@@ -19,7 +19,24 @@ export const getCredentials = async () => {
         },
       }
     );
-    return credentials;
+    if(credentials.status === 200) {
+      return credentials;
+    }
+    if(credentials.status === 400) {
+      const retry = await axios.post(
+        `/oauth_token`,
+        null,
+        {
+          params: {
+            client_id,
+            client_secret,
+            dataType,
+            grant_type,
+          },
+        }
+      );
+      return retry;
+    }
 };
 
 export const getBands = async (token) => {

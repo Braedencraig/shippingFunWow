@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import ShipmentRates from './ShipmentRates'
-import { useStoreActions, useStoreState } from 'easy-peasy'
+import { useStoreActions } from 'easy-peasy'
 import { createShipment, buyShipment, getShipment } from '../apis/chitchats'
+import Spinner from '../spinner.gif'
 import PropTypes from 'prop-types'
 
 
-const Card = ({ confirmCreateShipment, idx, pdf, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
+const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
     const [rates, setRates] = useState([])
     const [shipId, setShipId] = useState('')
     const [name, setName] = useState('')
     const [invalidRate, setInvalidRate] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const add = useStoreActions((actions) => actions.pngs.add)
     const addInfo = useStoreActions((actions) => actions.pngs.addInfo)
 
     const createShipmentFunc = async (orderToBeShipped) => {
+        setLoading(true)
         let namesOfRates = []
         const shipment = await createShipment(orderToBeShipped)
         shipment.rates.map(rate => namesOfRates.push(rate.postage_type))
@@ -24,37 +27,42 @@ const Card = ({ confirmCreateShipment, idx, pdf, orderToBeShipped, orderToBeShip
         if(!isNorthAmerica && !hasAsendia) {
             setInvalidRate(true)
             setRates(shipment.rates)
-        }
-
-        if(shipment.id) {
-            // Include the setTimeout to wait for chitchats, async await fails w 400 on patch
-            // COULD REFACTOR THE INSIDE TO ASYNC AWAIT
-            setTimeout(() => {
-                const shipmentBought = buyShipment(shipment.id)
-                shipmentBought.then(res => {
-                    if(res) {
-                        setTimeout(() => {
-                            const getShipmentInfo = getShipment(shipment.id)
-                            getShipmentInfo.then(info => {
-                                console.log(info.data.shipment.postage_label_png_url)
-                                add(info.data.shipment.postage_label_png_url)
-                            })
-                        }, 10000)
-                    }
-                })
-            }, 9000)
+        } else {
+            if(shipment.id) {
+                setTimeout(() => {
+                    const shipmentBought = buyShipment(shipment.id)
+                    shipmentBought.then(res => {
+                        if(res) {
+                            setTimeout(() => {
+                                const getShipmentInfo = getShipment(shipment.id)
+                                getShipmentInfo.then(info => {
+                                    setLoading(false)
+                                    add(info.data.shipment.postage_label_png_url)
+                                })
+                            }, 10000)
+                        }
+                    })
+                }, 9000)
+            }
         }
     }
 
     useEffect(() => {
         setName(ship_to_name)
         if(name && confirmCreateShipment) {
-            createShipmentFunc(orderToBeShipped)
-            addInfo(orderToBeShipped)
+            // this is soludtion to the buying issue
+            setTimeout(() => {
+                createShipmentFunc(orderToBeShipped)
+                addInfo(orderToBeShipped)
+            }, 3000)
         }
-    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate])
+    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading])
 
     const isNorthAmerica = ship_to_country_code === 'CA' || ship_to_country_code === 'US'
+
+    console.log(loading, 'USING THIS VARIABLE TO SET LOADING SPINNERS BEFORE CLICKING PDF BUTTON')
+
+
 
     return (
         <div key={idx} className={`order ${confirmCreateShipment && !invalidRate ? 'selected' : 'error'}`}>

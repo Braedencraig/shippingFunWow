@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { action, createStore, StoreProvider, useStoreState } from 'easy-peasy'
 import { getCredentials, getBands, getOrdersUnshipped } from './apis/bandcamp'
-import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 import Card from './components/Card'
-import PdfGenerator from './components/PdfGenerator'
 import Button from './components/Button'
 import Spinner from './spinner.gif'
 import "./App.css";
@@ -55,10 +53,6 @@ function App() {
             )
           })}
           <Button />
-          {/* <PdfGenerator /> */}
-          {/* <PDFDownloadLink document={<PdfGenerator />} fileName="somename.pdf">
-            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-          </PDFDownloadLink> */}
         </div>
       </StoreProvider>
     </div>

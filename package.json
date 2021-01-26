@@ -11,6 +11,7 @@
     "axios": "^0.21.0",
     "dotenv": "^8.2.0",
     "easy-peasy": "^4.0.1",
+    "eslint": "^7.18.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.2.1"
   }
 }

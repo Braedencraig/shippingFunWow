@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { buyShipment } from '../apis/chitchats'
+import { useStoreActions, useStoreState } from 'easy-peasy'
+import { buyShipment, getShipment } from '../apis/chitchats'
 
 const ShipmentRates = ({ rates, shipId, idx }) => {
     let namesOfRates = []
@@ -8,6 +9,9 @@ const ShipmentRates = ({ rates, shipId, idx }) => {
 
     const [rate, setRate] = useState('')
     const [shipmentBought, setShipmentBought] = useState(false)
+
+    const add = useStoreActions((actions) => actions.pngs.add)
+
 
     useEffect(() => {
     }, [hasAsendia, rates, rate, setShipmentBought])
@@ -25,15 +29,26 @@ const ShipmentRates = ({ rates, shipId, idx }) => {
                     return <option value={rate.postage_type}>{rate.postage_type}</option>
                 })}
                 </select>
-                <button onClick={async () => {
-                    const shipmentBought = await buyShipment(shipId, rate)
+                <button onClick={() => {
+                    const shipmentBought = buyShipment(shipId, rate)
                     setShipmentBought(true)
-                    const errorBoxes = Array.from(document.getElementsByClassName('error'))
-                    errorBoxes.map(error => {
-                        if(Array.from(error.children).length === 9) {
-                            error.style.display = 'none'
+                    shipmentBought.then(res => {
+                        if(res) {
+                            setTimeout(() => {
+                                const getShipmentInfo = getShipment(shipId)
+                                getShipmentInfo.then(info => {
+                                    console.log(info.data.shipment.postage_label_png_url)
+                                    add(info.data.shipment.postage_label_png_url)
+                                })
+                            }, 10000)
                         }
                     })
+                    // const errorBoxes = Array.from(document.getElementsByClassName('error'))
+                    // errorBoxes.map(error => {
+                    //     if(Array.from(error.children).length === 9) {
+                    //         error.style.display = 'none'
+                    //     }
+                    // })
                 }}>Buy shipment with selected rate</button>
             </div>
         ) : ''}
