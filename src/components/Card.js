@@ -26,6 +26,7 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
         const hasAsendia = namesOfRates.includes('asendia_priority_tracked')
         setShipId(shipment.id)
         // if(!isNorthAmerica && !hasAsendia) {
+            
         //     setInvalidRate(true)
         //     setRates(shipment.rates)
         // } else {
