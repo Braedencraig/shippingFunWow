@@ -17,18 +17,18 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
     const addInfo = useStoreActions((actions) => actions.pngs.addInfo)
 
     const createShipmentFunc = async (orderToBeShipped) => {
-        setLoading(true)
         let namesOfRates = []
         const shipment = await createShipment(orderToBeShipped)
+        console.log(shipment)
         shipment.rates.map(rate => namesOfRates.push(rate.postage_type))
         const hasAsendia = namesOfRates.includes('asendia_priority_tracked')
         setShipId(shipment.id)
-
-        if(!isNorthAmerica && !hasAsendia) {
-            setInvalidRate(true)
-            setRates(shipment.rates)
-        } else {
+        // if(!isNorthAmerica && !hasAsendia) {
+        //     setInvalidRate(true)
+        //     setRates(shipment.rates)
+        // } else {
             if(shipment.id) {
+                setLoading(true)
                 setTimeout(() => {
                     const shipmentBought = buyShipment(shipment.id)
                     shipmentBought.then(res => {
@@ -44,7 +44,7 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
                     })
                 }, 9000)
             }
-        }
+        // }
     }
 
     useEffect(() => {
@@ -57,9 +57,6 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
 
     const isNorthAmerica = ship_to_country_code === 'CA' || ship_to_country_code === 'US'
 
-    console.log(loading, 'USING THIS VARIABLE TO SET LOADING SPINNERS BEFORE CLICKING PDF BUTTON')
-    // FIX THIS SET LOADING STATE FOR ALL CARDS UNTIL READY FOR PDF
-    // THEN FIGURE OUT HOW TO MAKE THOSE BUY CALLS ONE AFTER ANOTHER NOT RUSHHED ON RENDER.
     if(loading) {
         return (
             <img src={Spinner} alt=""/>
@@ -76,7 +73,7 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
             <p>Zip-Postal: {ship_to_zip}</p>
             <p>Phone: {buyer_phone}</p>
             <p>Email: {buyer_email}</p>
-            {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''}
+            {/* {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''} */}
             {/* <button className="btn" onClick={async (e) => {
                 // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
             }}>Create & Buy Shipment</button> */}

@@ -32,6 +32,15 @@ function App() {
       const bands = await getBands(accessTkn);
       const ordersUnshipped  = await getOrdersUnshipped(accessTkn, bands)
       setUnfilledOrders(ordersUnshipped?.data.items)
+
+      const result = ordersUnshipped.data.items.reduce(function (r, a) {
+        r[a.payment_id] = r[a.payment_id] || [];
+        r[a.payment_id].push(a);
+        return r;
+      }, Object.create(null));
+      console.log(result)
+      console.log(ordersUnshipped.data.items)
+      
     }
     fetchData()
   }, [])
