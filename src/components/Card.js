@@ -7,6 +7,8 @@ import PropTypes from 'prop-types'
 
 
 const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
+
+    console.log(orderToBeShipped)
     const [rates, setRates] = useState([])
     const [shipId, setShipId] = useState('')
     const [name, setName] = useState('')
