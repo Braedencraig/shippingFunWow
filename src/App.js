@@ -54,6 +54,7 @@ function App() {
           <button onClick={() => {
             const result = window.confirm('Are you sure?')
             setConfirmCreateShipment(result)
+            // THIS IS FINE, CREATE EXCEPTION FOR INDIVIDUAL ORDER PROCESSING BY CHANGING CONFIRMCREATESHIPMENT PROP
           }}>CLICK HERE</button>
 
           {unfilledOrders === null ? ( <img src={Spinner} alt=""/>) : unfilledOrders.map((orderToBeShipped, idx) => { 
