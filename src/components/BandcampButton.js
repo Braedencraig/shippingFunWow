@@ -15,7 +15,7 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
           );
           if (result) {
             shipments.data.map((shipment) => {
-              if (shipment.status === "inducted") {
+              if (shipment.status === "inducted" || shipment.status === "received" || shipment.status === "released") {
                 markShipped(token, shipment.order_id, shipment.tracking_url);
               }
             });
