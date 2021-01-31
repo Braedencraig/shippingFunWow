@@ -11,25 +11,32 @@ import {
 } from "@react-pdf/renderer";
 import logo from "../logo.svg";
 
-const PdfGenerator = ({ todo, todoInfo }) => {
-  todoInfo.map((single, i) => {
-    single.url = todo[i]
-  })
+const PdfGenerator = ({ urls, info }) => {
+  info.map((order, i) => {
+    order.url = urls[i];
+  });
 
-  
-  const Quixote = () => {
+  const PdfIdee = () => {
     return (
       <Document>
-        {todoInfo.map((order, i) => {
+        {info.map((order, i) => {
           return (
             <Page style={styles.body}>
               <Image style={styles.image} src={order.url} />
               <Text style={styles.title}>Packing List</Text>
-              {order.map(item => {
-                if(item.quantity > 1) {
-                  return  <Text style={styles.highlight}>{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+              {order.map((item) => {
+                if (item.quantity > 1) {
+                  return (
+                    <Text
+                      style={styles.highlight}
+                    >{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                  );
                 } else {
-                  return  <Text style={styles.author}>{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                  return (
+                    <Text
+                      style={styles.text}
+                    >{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                  );
                 }
               })}
             </Page>
@@ -63,46 +70,20 @@ const PdfGenerator = ({ todo, todoInfo }) => {
       textAlign: "center",
       marginBottom: 10,
     },
-    author: {
+    text: {
       fontSize: 12,
       textAlign: "center",
       marginBottom: 10,
-    },
-    subtitle: {
-      fontSize: 18,
-      margin: 12,
-      fontFamily: "Oswald",
-    },
-    text: {
-      margin: 12,
-      fontSize: 14,
-      textAlign: "justify",
-      fontFamily: "Times-Roman",
     },
     image: {
       marginVertical: -20,
       marginHorizontal: 100,
       transform: "rotate(90deg)",
     },
-    header: {
-      fontSize: 12,
-      marginBottom: 20,
-      textAlign: "center",
-      color: "grey",
-    },
-    pageNumber: {
-      position: "absolute",
-      fontSize: 12,
-      bottom: 30,
-      left: 0,
-      right: 0,
-      textAlign: "center",
-      color: "grey",
-    },
   });
 
   return (
-    <PDFDownloadLink document={<Quixote />} fileName="somename.pdf">
+    <PDFDownloadLink document={<PdfIdee />} fileName="somename.pdf">
       {({ blob, url, loading, error }) =>
         loading ? "Loading document..." : "Download now!"
       }

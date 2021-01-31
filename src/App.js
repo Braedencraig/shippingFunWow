@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { action, createStore, StoreProvider, useStoreState } from 'easy-peasy'
-import { getCredentials, getBands, getOrdersUnshipped } from './apis/bandcamp'
-import { getAllShipments } from './apis/chitchats'
+import { action, createStore, StoreProvider, useStoreState } from "easy-peasy";
+import { getCredentials, getBands, getOrdersUnshipped } from "./apis/bandcamp";
+import { getAllShipments } from "./apis/chitchats";
 
-import Card from './components/Card'
-import Button from './components/Button'
-import BandcampButton from './components/BandcampButton'
+import Card from "./components/Card";
+import Button from "./components/Button";
+import BandcampButton from "./components/BandcampButton";
 
-import Spinner from './spinner.gif'
+import Spinner from "./spinner.gif";
 import "./App.css";
 
-require('dotenv').config()
+require("dotenv").config();
 
 function App() {
-  const [unfilledOrders, setUnfilledOrders] = useState(null)
-  const [confirmCreateShipment, setConfirmCreateShipment] = useState(false)
-  const [token, setToken] = useState('')
-  const [getShip, setGetShip] = useState(null)
-  const [bandcampError, setBandcampError] = useState(false)
+  const [unfilledOrders, setUnfilledOrders] = useState(null);
+  const [confirmCreateShipment, setConfirmCreateShipment] = useState(false);
+  const [token, setToken] = useState("");
+  const [getShip, setGetShip] = useState(null);
+  const [bandcampError, setBandcampError] = useState(false);
 
   const store = createStore({
     pngs: {
@@ -34,64 +34,82 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const ship = await getAllShipments()
-      setGetShip(ship)
-      const clientCreds = await getCredentials()
-      if(clientCreds === 'error') {
-        setBandcampError(true)
+      const ship = await getAllShipments();
+      setGetShip(ship);
+      const clientCreds = await getCredentials();
+      if (clientCreds === "error") {
+        setBandcampError(true);
       } else {
-        const accessTkn = clientCreds?.data.access_token
-        setToken(accessTkn)
-        const bands = await getBands(accessTkn)
-        const ordersUnshipped  = await getOrdersUnshipped(accessTkn, bands)
+        const accessTkn = clientCreds?.data.access_token;
+        setToken(accessTkn);
+        const bands = await getBands(accessTkn);
+        const ordersUnshipped = await getOrdersUnshipped(accessTkn, bands);
         const result = ordersUnshipped.data.items.reduce(function (r, a) {
-          r[a.payment_id] = r[a.payment_id] || []
-          r[a.payment_id].push(a)
-          return r
-        }, Object.create(null))
-        const sortedByPaymentId = Object.values(result)
-        setUnfilledOrders(sortedByPaymentId)
+          r[a.payment_id] = r[a.payment_id] || [];
+          r[a.payment_id].push(a);
+          return r;
+        }, Object.create(null));
+        const sortedByPaymentId = Object.values(result);
+        setUnfilledOrders(sortedByPaymentId);
       }
     }
-    fetchData()
-  }, [setToken, setUnfilledOrders, setGetShip, setBandcampError])
+    fetchData();
+  }, [setToken, setUnfilledOrders, setGetShip, setBandcampError]);
 
-  console.log(getShip)
+  console.log(getShip);
 
-  if(bandcampError) {
-    return <h2>Error with Bandcamp API Secret, Please Refresh</h2>
+  if (bandcampError) {
+    return <h2>Error with Bandcamp API Secret, Please Refresh</h2>;
   }
 
-  if(unfilledOrders === null) {
+  if (unfilledOrders === null) {
     return (
       <div className="loadingDisplay">
         <h2>Gathering Unshipped Orders</h2>
-        <img src={Spinner} alt=""/>
+        <img src={Spinner} alt="" />
       </div>
-    )
+    );
   }
 
   return (
     <div className="App">
       <StoreProvider store={store}>
         <div className="toBeShipped">
-          <h2>Orders To Be Shipped: {unfilledOrders === null ? '' : unfilledOrders.length}</h2>
+          <h2>
+            Orders To Be Shipped:{" "}
+            {unfilledOrders === null ? "" : unfilledOrders.length}
+          </h2>
           <div className="btn">
-            <button onClick={() => {
-              const result = window.confirm('Select all shipments?')
-              setConfirmCreateShipment(result)
-            }}>Select All Shipments For Processing</button>
+            <button
+              onClick={() => {
+                const result = window.confirm("Select all shipments?");
+                setConfirmCreateShipment(result);
+              }}
+            >
+              Select All Shipments For Processing
+            </button>
           </div>
           <div className="orderFlex">
-          {unfilledOrders && unfilledOrders.map((orderToBeShipped, idx) => {   
-            return (
-                <Card key={orderToBeShipped[0].sale_item_id} orderToBeShipped={orderToBeShipped} idx={idx} shipments={getShip} confirmCreateShipment={confirmCreateShipment} />
-            )
-          })}
+            {unfilledOrders &&
+              unfilledOrders.map((orderToBeShipped, idx) => {
+                return (
+                  <Card
+                    key={orderToBeShipped[0].sale_item_id}
+                    orderToBeShipped={orderToBeShipped}
+                    idx={idx}
+                    shipments={getShip}
+                    confirmCreateShipment={confirmCreateShipment}
+                  />
+                );
+              })}
           </div>
           <div className="serious">
             <Button />
-            <BandcampButton unfilledOrders={unfilledOrders} token={token} shipments={getShip} />
+            <BandcampButton
+              unfilledOrders={unfilledOrders}
+              token={token}
+              shipments={getShip}
+            />
           </div>
         </div>
       </StoreProvider>

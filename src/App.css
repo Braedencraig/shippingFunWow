@@ -18,8 +18,20 @@ h2 {
 }
 
 p {
-  font-size: 30px;
+  font-size: 22px;
   margin: 5px 0;
+}
+
+li {
+  font-size: 20px;;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+input {
+  cursor: pointer;
 }
 
 .order {
@@ -32,7 +44,8 @@ p {
 }
 
 .complete {
-  background: rgba(34,139,34, 0.5)
+  background: rgba(34, 139, 34, 0.5);
+  pointer-events: none;
 }
 
 .selected {
@@ -65,6 +78,11 @@ button:hover {
   justify-content: space-around;
   margin-top: 40px;
   margin-bottom: 20px;
+}
+
+.orderFlex img {
+  width: 200px;
+  height: 200px;
 }
 
 .btn,
@@ -110,4 +128,25 @@ button:hover {
 .loadingDisplay img {
   width: 300px;
   margin: 0 auto;
+}
+
+.individualShip {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row-reverse;
+  align-self: end;
+}
+
+input {
+  margin-right: 10px;
+}
+
+.tinyText {
+  font-size: 18px;
+}
+
+button.processOrder {
+  padding: 5px;
+  font-size: 14px;
+  margin-top: 5px;
 }
