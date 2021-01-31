@@ -11,7 +11,7 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
       <button
         onClick={async () => {
           const result = window.confirm(
-            "Mark All Shipments With A Status Of READY As Shipped Via Bandcamp?"
+            "Mark All Shipments With A Status Of Inducted/Recevied/Released As Shipped Via Bandcamp?"
           );
           if (result) {
             shipments.data.map((shipment) => {

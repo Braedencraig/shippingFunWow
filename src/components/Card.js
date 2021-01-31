@@ -124,7 +124,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
             </button>
           ) : (
             <>
-              <p className="tinyText">Process individual shipment</p>
+              <p className="tinyText">Process Individual Shipment</p>
               <input
                 className="checkbox"
                 onClick={handleClick}
