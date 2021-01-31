@@ -5,60 +5,58 @@ import { createShipment, buyShipment, getShipment } from '../apis/chitchats'
 import Spinner from '../spinner.gif'
 import PropTypes from 'prop-types'
 
-
-const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: { ship_to_country_code, ship_to_name, ship_to_street, ship_to_street_2, ship_to_city, ship_to_state, ship_to_country, ship_to_zip, buyer_email, buyer_phone } }) => {
-
+const Card = ({ confirmCreateShipment, orderToBeShipped, idx }) => {
     const [rates, setRates] = useState([])
     const [shipId, setShipId] = useState('')
     const [name, setName] = useState('')
     const [invalidRate, setInvalidRate] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [checked, setChecked] = useState(false)
+    const [complete, setComplete] = useState(false)
+
+    const handleClick = () => setChecked(!checked)
 
     const add = useStoreActions((actions) => actions.pngs.add)
     const addInfo = useStoreActions((actions) => actions.pngs.addInfo)
 
+    const item = orderToBeShipped.map(item => {
+        return <li key={item.sale_item_id}><span className={item.quantity > 1 ? 'highlight' : ''}>{item.quantity} </span>{item.item_name}</li>
+    })
+
     const createShipmentFunc = async (orderToBeShipped) => {
-        let namesOfRates = []
         const shipment = await createShipment(orderToBeShipped)
-        
-        // console.log(shipment)
-        // shipment.rates.map(rate => namesOfRates.push(rate.postage_type))
-        // const hasAsendia = namesOfRates.includes('asendia_priority_tracked')
-        // setShipId(shipment.id)
-        // // if(!isNorthAmerica && !hasAsendia) {
-            
-        // //     setInvalidRate(true)
-        // //     setRates(shipment.rates)
-        // // } else {
-        //     if(shipment.id) {
-        //         setLoading(true)
-        //         setTimeout(() => {
-        //             const shipmentBought = buyShipment(shipment.id)
-        //             shipmentBought.then(res => {
-        //                 if(res) {
-        //                     setTimeout(() => {
-        //                         const getShipmentInfo = getShipment(shipment.id)
-        //                         getShipmentInfo.then(info => {
-        //                             setLoading(false)
-        //                             add(info.data.shipment.postage_label_png_url)
-        //                         })
-        //                     }, 10000)
-        //                 }
-        //             })
-        //         }, 9000)
-        //     }
-        // }
+        if(shipment.id) {
+            setLoading(true)
+            setTimeout(() => {
+                const shipmentBought = buyShipment(shipment.id)
+                shipmentBought.then(res => {
+                    if(res) {
+                        setTimeout(() => {
+                            const getShipmentInfo = getShipment(shipment.id)
+                            getShipmentInfo.then(info => {
+                                setLoading(false)
+                                add(info.data.shipment.postage_label_png_url)
+                                setComplete(true)
+                            })
+                        }, 10000)
+                    }
+                })
+            }, 9000)
+        }
     }
 
     useEffect(() => {
-        setName(orderToBeShipped[0].ship_to_name)
-        if(name && confirmCreateShipment) {
+        if(confirmCreateShipment) {
+            setChecked(true)
+        }
+        if(checked) {
             createShipmentFunc(orderToBeShipped)
             addInfo(orderToBeShipped)
-        }
-    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading])
+        }       
 
-    const isNorthAmerica = ship_to_country_code === 'CA' || ship_to_country_code === 'US'
+    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading, setChecked, checked, setComplete])
+
+
 
     if(loading) {
         return (
@@ -66,17 +64,17 @@ const Card = ({ confirmCreateShipment, idx, orderToBeShipped, orderToBeShipped: 
         )
     } else {
         return (
-            <div key={idx} className={`order ${confirmCreateShipment && !invalidRate ? 'selected' : 'error'}`}>
-            <p>Name: {orderToBeShipped[0].ship_to_name}</p>
-            <p>Address: {orderToBeShipped[0].ship_to_street}</p>
-            {orderToBeShipped[0].ship_to_street_2 !== null ?  <p>Address2: {orderToBeShipped[0].ship_to_street_2}</p> : '' }
-            <p>Shipping to: {`${orderToBeShipped[0].ship_to_city}, ${orderToBeShipped[0].ship_to_country}`}</p>
-            <p>Phone: {orderToBeShipped[0].buyer_phone}</p>
-            <p>Email: {orderToBeShipped[0].buyer_email}</p>
-            {/* {!isNorthAmerica ? <ShipmentRates idx={idx} shipId={shipId} rates={rates} /> : ''} */}
-            {/* <button className="btn" onClick={async (e) => {
-                // const test = await markAsShipped(token, orderToBeShipped, shipment.tracking)
-            }}>Create & Buy Shipment</button> */}
+            <div key={orderToBeShipped[0].sale_item_id} className={`order ${complete ? 'complete' : ''}`}>
+                <p>Name: {orderToBeShipped[0].ship_to_name}</p>
+                <p>Country: {orderToBeShipped[0].ship_to_country}</p>
+                <div className="flex-container">
+                    <p>Items</p>
+                    <ul>
+                        {item}
+                    </ul>
+                </div>
+                <p>Process individual shipment</p>
+                <input className="checkbox" onClick={handleClick} onChange={() => confirmCreateShipment = true} checked={checked} type="checkbox" />
             </div>
         )
     }

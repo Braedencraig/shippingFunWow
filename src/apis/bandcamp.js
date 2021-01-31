@@ -92,33 +92,31 @@ export const getAllRecentOrders = async (token, bands) => {
     return allRecentOrders
 }
 
-export const markAsShipped = async (token, orderToBeShipped, trackingUrl) => {
-  // THIS WORKS DONT USE BECAUSE IT FUCKS SHIT UP, ask alex to make a bunch of fake orders so I can mark as shipped?!?!?!?!
-  // WHEN inducted/released, click buttton that takes all orders that are received and then markAsShipped, inducted on clikc, then send mark as shipped.
-  // 
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  const params = {
-    items: [
-      {
-        id: orderToBeShipped.payment_id,
-        id_type: "p",
-        shipped: true,
-        tracking_code: trackingUrl,
-        notification: true,
-        notification_message: `Your items will be shipped within 24 hours! Your tracking url is ${trackingUrl}`
-      }
-    ]
-  }
+export const markAsShipped = async (token, id, trackingUrl) => {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    const params = {
+      items: [
+        {
+          id: id,
+          id_type: "p",
+          shipped: true,
+          tracking_code: trackingUrl,
+          notification: true,
+          notification_message: `Your items will be shipped within 24 hours! Your tracking url is ${trackingUrl}`
+        }
+      ]
+    }
+    const shippedOrder = await axios.post(
+      "/api/merchorders/2/update_shipped",
+      params,
+      config
+    );
+    return shippedOrder
     
-  return params
-
-  // const shippedOrder = await axios.post(
-  //   "/api/merchorders/2/update_shipped",
-  //   params,
-  //   config
-  // );
-  // console.log(shippedOrder, 'ORDER SHIPPED?!?!')
-  // return shippedOrder
+  } catch (error) {
+    console.log(error)
+  }
 }

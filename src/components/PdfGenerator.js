@@ -11,11 +11,11 @@ import {
 } from "@react-pdf/renderer";
 import logo from "../logo.svg";
 
-// Create Document Component
 const PdfGenerator = ({ todo, todoInfo }) => {
   todoInfo.map((single, i) => {
     single.url = todo[i]
   })
+
   
   const Quixote = () => {
     return (
@@ -25,10 +25,13 @@ const PdfGenerator = ({ todo, todoInfo }) => {
             <Page style={styles.body}>
               <Image style={styles.image} src={order.url} />
               <Text style={styles.title}>Packing List</Text>
-              <Text style={styles.author}>{order.item_name}</Text>
-              <Text style={styles.author}>{order.item_name}</Text>
-              <Text style={styles.author}>{order.item_name}</Text>
-              <Text style={styles.author}>{order.item_name}</Text>
+              {order.map(item => {
+                if(item.quantity > 1) {
+                  return  <Text style={styles.highlight}>{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                } else {
+                  return  <Text style={styles.author}>{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                }
+              })}
             </Page>
           );
         })}
@@ -51,6 +54,13 @@ const PdfGenerator = ({ todo, todoInfo }) => {
       fontSize: 24,
       textAlign: "center",
       fontFamily: "Oswald",
+      marginBottom: 10,
+    },
+    highlight: {
+      backgroundColor: "yellow",
+      color: "red",
+      fontSize: 12,
+      textAlign: "center",
       marginBottom: 10,
     },
     author: {

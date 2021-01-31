@@ -17,10 +17,11 @@ const Button = () => {
 
     return (
         <>
+        <p>Do not click unless your dumbass is sure</p>
         <button onClick={() => {
             setCount(prevState => prevState + 1)
         }}>
-            Create shipping pdf/packing download
+            Create shipping pdf/packing download for all orders
         </button>
         {count > 0 && (<PdfGenerator todo={todo} todoInfo={todoInfo} />)}
         </>

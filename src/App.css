@@ -28,6 +28,15 @@ p {
   width: 50%;
 }
 
+.complete {
+  background: rgba(34,139,34, 0.5)
+}
+
 .selected {
   display: none;
+}
+
+.highlight {
+  background: yellow;
+  color: red;
 }
