@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { action, createStore, StoreProvider, useStoreState } from 'easy-peasy'
 import { getCredentials, getBands, getOrdersUnshipped } from './apis/bandcamp'
+import { getAllShipments } from './apis/chitchats'
+
 
 import Card from './components/Card'
 import Button from './components/Button'
@@ -15,6 +17,20 @@ function App() {
   const [unfilledOrders, setUnfilledOrders] = useState(null)
   const [confirmCreateShipment, setConfirmCreateShipment] = useState(false)
   const [token, setToken] = useState('')
+  const [getShip, setGetShip] = useState(null)
+
+//   const checkShipments = async (orderToBeShipped) => {
+//     const ship = await getAllShipments()
+//       ship.data.map(test => {
+//         if(parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
+//           return <div>asdasdasdsads</div>
+//         } else {
+//           return (
+//             <Card key={orderToBeShipped[0].sale_item_id} orderToBeShipped={orderToBeShipped} confirmCreateShipment={confirmCreateShipment} />
+//           )
+//         }
+//       })
+// }
 
   const store = createStore({
     pngs: {
@@ -31,6 +47,8 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
+      const ship = await getAllShipments()
+      setGetShip(ship)
       const clientCreds = await getCredentials();
       const accessTkn = clientCreds?.data.access_token;
       setToken(accessTkn)
@@ -45,7 +63,23 @@ function App() {
       setUnfilledOrders(sortedByPaymentId)
     }
     fetchData()
-  }, [setToken])
+  }, [setToken, setUnfilledOrders, setGetShip])
+
+  // if(unfilledOrders !== null) {
+  //   console.log(getShip)
+  //   unfilledOrders.map(orderToBeShipped => {
+  //     getShip.data.map(test => {
+  //       if(parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
+  //         return <div>IT SHOULDNT BE SHOW</div>
+  //       } else {
+  //         return (
+  //           <Card key={orderToBeShipped[0].sale_item_id} orderToBeShipped={orderToBeShipped} shipments={getShip} confirmCreateShipment={confirmCreateShipment} />
+  //         )
+  //       }
+  //     })
+  //   })
+  // }
+
   
   return (
     <div className="App">
@@ -58,7 +92,7 @@ function App() {
           }}>Select All Shipments For Processing</button>
           {unfilledOrders === null ? ( <img src={Spinner} alt=""/>) : unfilledOrders.map((orderToBeShipped, idx) => {   
             return (
-                <Card key={orderToBeShipped[0].sale_item_id} orderToBeShipped={orderToBeShipped} idx={idx} confirmCreateShipment={confirmCreateShipment} />
+                <Card key={orderToBeShipped[0].sale_item_id} orderToBeShipped={orderToBeShipped} idx={idx} shipments={getShip} confirmCreateShipment={confirmCreateShipment} />
             )
           })}
           <Button />

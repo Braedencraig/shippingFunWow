@@ -97,6 +97,7 @@ export const markAsShipped = async (token, id, trackingUrl) => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
+    // COULD PUT MESSAGE HERE
     const params = {
       items: [
         {
@@ -105,7 +106,6 @@ export const markAsShipped = async (token, id, trackingUrl) => {
           shipped: true,
           tracking_code: trackingUrl,
           notification: true,
-          notification_message: `Your items will be shipped within 24 hours! Your tracking url is ${trackingUrl}`
         }
       ]
     }

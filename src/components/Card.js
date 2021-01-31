@@ -5,7 +5,7 @@ import { createShipment, buyShipment, getShipment } from '../apis/chitchats'
 import Spinner from '../spinner.gif'
 import PropTypes from 'prop-types'
 
-const Card = ({ confirmCreateShipment, orderToBeShipped, idx }) => {
+const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
     const [rates, setRates] = useState([])
     const [shipId, setShipId] = useState('')
     const [name, setName] = useState('')
@@ -13,6 +13,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx }) => {
     const [loading, setLoading] = useState(false)
     const [checked, setChecked] = useState(false)
     const [complete, setComplete] = useState(false)
+    const [noShow, setNoShow] = useState(false)
 
     const handleClick = () => setChecked(!checked)
 
@@ -52,11 +53,30 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx }) => {
         if(checked) {
             createShipmentFunc(orderToBeShipped)
             addInfo(orderToBeShipped)
-        }       
+        }
 
-    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading, setChecked, checked, setComplete])
+        shipments.data.map(test => {
+            if(parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
+                setNoShow(true)
+            } 
+        })
 
+    }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading, setChecked, checked, setComplete, setNoShow])
 
+    if(noShow) {
+        return (
+            <div key={orderToBeShipped[0].sale_item_id} className={`order complete`}>
+                <p>Name: {orderToBeShipped[0].ship_to_name}</p>
+                <p>Country: {orderToBeShipped[0].ship_to_country}</p>
+                <div className="flex-container">
+                    <p>Items</p>
+                    <ul>
+                        {item}
+                    </ul>
+                </div>
+            </div>
+        )
+    }
 
     if(loading) {
         return (
