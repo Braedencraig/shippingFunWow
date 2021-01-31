@@ -11,10 +11,9 @@ module.exports = function(app) {
         secure: false,
         target: 'https://bandcamp.com',
     }));
-    // REMOVE STAGING FOR PROD CHITCHATS
     app.use(createProxyMiddleware('/clients', {
         changeOrigin: true,
         secure: false,
-        target: 'https://staging.chitchats.com/api/v1',
+        target: 'https://chitchats.com/api/v1',
     }));
   };

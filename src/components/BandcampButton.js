@@ -15,10 +15,7 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
           );
           if (result) {
             shipments.data.map((shipment) => {
-              // CHANGE THIS TO INDUCTED FOR PROD
-              // MARK AS SHIPPED IS MY ONLY QUESTION
-              //  MIGHT JUST HAVE TO DO THIS WHEN THE SHIPMENT IS CREATED AND DOWNLOADED INSTEAD
-              if (shipment.status === "ready") {
+              if (shipment.status === "inducted") {
                 markShipped(token, shipment.order_id, shipment.tracking_url);
               }
             });

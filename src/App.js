@@ -50,7 +50,12 @@ function App() {
           return r;
         }, Object.create(null));
         const sortedByPaymentId = Object.values(result);
-        setUnfilledOrders(sortedByPaymentId);
+        const filteredOutSkip = sortedByPaymentId.filter(order => order[0].ship_notes === null || order[0].ship_notes.indexOf("skip") === -1)
+        console.log(filteredOutSkip)
+        setUnfilledOrders(filteredOutSkip);
+        // setUnfilledOrders(sortedByPaymentId);
+        var todayDate = new Date().toISOString().slice(0,10);
+        console.log(todayDate)
       }
     }
     fetchData();

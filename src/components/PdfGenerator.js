@@ -81,9 +81,10 @@ const PdfGenerator = ({ urls, info }) => {
       transform: "rotate(90deg)",
     },
   });
+  const todayDate = new Date().toISOString().slice(0,10);
 
   return (
-    <PDFDownloadLink document={<PdfIdee />} fileName="somename.pdf">
+    <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
       {({ blob, url, loading, error }) =>
         loading ? "Loading document..." : "Download now!"
       }
