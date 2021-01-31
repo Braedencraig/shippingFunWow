@@ -134,37 +134,38 @@ export const createShipment = async (orderToBeShipped) => {
 }
 
 export const getShipment = async (id) => {
-    const res = await axios.get(`/clients/${chitChatClientId}/shipments/${id}`, {
-        headers: {
-            Authorization: chitChatTkn
-        }  
-    });
-    if(res.status === 200) {
-        return res
-    } else {
-        console.log('HERERERE')
-        return false
+    try {
+        const res = await axios.get(`/clients/${chitChatClientId}/shipments/${id}`, {
+            headers: {
+                Authorization: chitChatTkn
+            }  
+        });
+        if(res.status === 200) {
+            return res
+        } 
+    } catch (error) {
+        console.log(error)
     }
 }
 
 export const getAllShipments = async () => {
-    const res = await axios.get(`/clients/${chitChatClientId}/shipments`,
-     {
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            Authorization: chitChatTkn
-        }  
-    })
-    if(res.status === 200) {
-        return res
-    } else {
-        console.log('HERERERE')
-        return false
-    }
+    try {
+        const res = await axios.get(`/clients/${chitChatClientId}/shipments`,
+        {
+            headers: {
+                Authorization: chitChatTkn
+            }  
+        })
+        if(res.status === 200) {
+            return res
+        } 
+    } catch (error) {
+        console.log(error)
+    } 
 }
 
-export const buyShipment = async (shipmentId, postageType = null) => {
-    if(postageType === null) {
+export const buyShipment = async (shipmentId) => {
+    try {
         const res = await axiosWithDelimiterFile.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, null, {
             headers: {
                 Authorization: chitChatTkn
@@ -173,17 +174,7 @@ export const buyShipment = async (shipmentId, postageType = null) => {
         if(res.status === 200) {
             return true
         }
-    } else {
-        const params = {
-            postage_type: postageType
-        }
-        const res = await axios.patch(`/clients/${chitChatClientId}/shipments/${shipmentId}/buy`, params, {
-            headers: {
-                Authorization: chitChatTkn
-            }
-        })
-        if(res.status === 200) {
-            return true
-        }
+    } catch (error) {
+        console.log(error)
     }
 }

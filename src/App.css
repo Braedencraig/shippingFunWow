@@ -12,6 +12,9 @@ html {
 h2 {
   font-size: 40px;
   margin: 30px 0;
+  text-align: center;
+  color: #000;
+  text-transform: uppercase;
 }
 
 p {
@@ -25,7 +28,7 @@ p {
   border: 10px solid black;
   margin-bottom: 20px;
   padding: 20px;
-  width: 50%;
+  width: 25%;
 }
 
 .complete {
@@ -39,4 +42,72 @@ p {
 .highlight {
   background: yellow;
   color: red;
+}
+
+button {
+  background: transparent;
+  border: none;
+  border: 5px solid black;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: black;
+  color: white;
+}
+
+.orderFlex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.btn,
+.loadingDisplay,
+.serious {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loadingDisplay {
+  flex-direction: column;
+}
+
+.serious {
+  align-items: center;
+}
+
+.serious button {
+  margin: 20px;
+}
+
+.pdfGeneration {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.pdfGeneration a {
+  color: black;
+  text-transform: uppercase;
+  font-size: 18px;
+  position: absolute;
+  font-weight: bold;
+  bottom: -15px;
+  left: 20px;
+}
+
+.pdfGeneration a:hover {
+  color: red;
+}
+
+.loadingDisplay img {
+  width: 300px;
+  margin: 0 auto;
 }

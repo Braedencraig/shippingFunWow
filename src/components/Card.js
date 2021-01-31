@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ShipmentRates from './ShipmentRates'
 import { useStoreActions } from 'easy-peasy'
 import { createShipment, buyShipment, getShipment } from '../apis/chitchats'
-import Spinner from '../spinner.gif'
+import Spinner from '../spinnerTwo.gif'
 import PropTypes from 'prop-types'
 
 const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
@@ -54,12 +54,15 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
             createShipmentFunc(orderToBeShipped)
             addInfo(orderToBeShipped)
         }
+        
+        if(shipments) {
+            shipments.data.map(test => {
+                if(parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
+                    setNoShow(true)
+                } 
+            })
+        }
 
-        shipments.data.map(test => {
-            if(parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
-                setNoShow(true)
-            } 
-        })
 
     }, [setRates, setShipId, confirmCreateShipment, setName, setInvalidRate, setLoading, setChecked, checked, setComplete, setNoShow])
 
