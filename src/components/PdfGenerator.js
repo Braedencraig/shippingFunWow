@@ -12,6 +12,7 @@ import {
 import logo from "../logo.svg";
 
 const PdfGenerator = ({ urls, info }) => {
+  
   info.map((order, i) => {
     order.url = urls[i];
   });
@@ -29,13 +30,13 @@ const PdfGenerator = ({ urls, info }) => {
                   return (
                     <Text
                       style={styles.highlight}
-                    >{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                    >{`Quanity: ${item.quantity}, Item: ${item.option !== null ? item.option : ''} - ${item.item_name}`}</Text>
                   );
                 } else {
                   return (
                     <Text
                       style={styles.text}
-                    >{`Quanity: ${item.quantity}, Item: ${item.item_name}`}</Text>
+                    >{`Quanity: ${item.quantity}, Item:  ${item.option !== null ? item.option : ''} - ${item.item_name}`}</Text>
                   );
                 }
               })}
@@ -56,12 +57,14 @@ const PdfGenerator = ({ urls, info }) => {
       paddingTop: 0,
       paddingBottom: 0,
       paddingHorizontal: 0,
+      paddingVertical: 0,
     },
     title: {
       fontSize: 24,
       textAlign: "center",
       fontFamily: "Oswald",
       marginBottom: 10,
+      marginTop: 100,
     },
     highlight: {
       backgroundColor: "yellow",
@@ -76,7 +79,7 @@ const PdfGenerator = ({ urls, info }) => {
       marginBottom: 10,
     },
     image: {
-      marginVertical: -20,
+      marginVertical: -100,
       marginHorizontal: 100,
       transform: "rotate(90deg)",
     },

@@ -61,7 +61,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
       createShipmentFunc(orderToBeShipped);
       addInfo(orderToBeShipped);
     }
-
+    // REMOVE FOR STAGING HERE
     if (shipments) {
       shipments.data.map((test) => {
         if (parseInt(test.order_id) === orderToBeShipped[0].payment_id) {

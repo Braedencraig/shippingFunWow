@@ -37,7 +37,8 @@ export const getBands = async (token) => {
   }
 };
 
-// THIS IS FOR ACTUAL LABEL NOT TEST ONE
+// band_id: bands.data.bands[0].band_id,
+// STAGING CHANGE HERE 0 staging, 2 live.
 export const getOrdersUnshipped = async (token, bands) => {
   try {
     const config = {
@@ -88,7 +89,6 @@ export const markAsShipped = async (token, id, trackingUrl) => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
-    // COULD PUT MESSAGE HERE TO NOTIFY WILL BE SHIPPED IN 24-48 hours.
     const params = {
       items: [
         {

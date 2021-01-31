@@ -3,6 +3,7 @@ import axiosWithDelimiterFile from "../apis/axios";
 
 const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET;
 const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID;
+// STAGING CHANGE HERE ENV AS WELL BAND CAMP INFO
 
 export const createShipment = async (orderToBeShipped) => {
   try {
@@ -113,7 +114,7 @@ export const createShipment = async (orderToBeShipped) => {
       postage_type: postage,
     };
 
-    const res = await axios.post(
+    const res = await axiosWithDelimiterFile.post(
       `/clients/${chitChatClientId}/shipments`,
       shipmentBody,
       {

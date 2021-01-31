@@ -11,6 +11,7 @@ module.exports = function(app) {
         secure: false,
         target: 'https://bandcamp.com',
     }));
+    // STAGING CHANGE HERE
     app.use(createProxyMiddleware('/clients', {
         changeOrigin: true,
         secure: false,

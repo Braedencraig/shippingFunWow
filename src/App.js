@@ -51,17 +51,11 @@ function App() {
         }, Object.create(null));
         const sortedByPaymentId = Object.values(result);
         const filteredOutSkip = sortedByPaymentId.filter(order => order[0].ship_notes === null || order[0].ship_notes.indexOf("skip") === -1)
-        console.log(filteredOutSkip)
         setUnfilledOrders(filteredOutSkip);
-        // setUnfilledOrders(sortedByPaymentId);
-        var todayDate = new Date().toISOString().slice(0,10);
-        console.log(todayDate)
       }
     }
     fetchData();
   }, [setToken, setUnfilledOrders, setGetShip, setBandcampError]);
-
-  console.log(getShip);
 
   if (bandcampError) {
     return <h2>Error with Bandcamp API Secret, Please Refresh</h2>;
