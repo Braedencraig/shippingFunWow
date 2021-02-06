@@ -58,6 +58,7 @@ function App() {
   }, [setToken, setUnfilledOrders, setGetShip, setBandcampError]);
 
   if (bandcampError) {
+    window.location.reload();
     return <h2>Error with Bandcamp API Secret, Please Refresh</h2>;
   }
 

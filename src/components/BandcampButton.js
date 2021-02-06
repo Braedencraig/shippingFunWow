@@ -8,7 +8,7 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
 
   if (shipments) {
     return (
-      <button
+      <button className="bandcampBtn"
         onClick={async () => {
           const result = window.confirm(
             "Mark All Shipments With A Status Of Inducted/Recevied/Released As Shipped Via Bandcamp?"
@@ -19,6 +19,7 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
                 markShipped(token, shipment.order_id, shipment.tracking_url);
               }
             });
+            document.getElementsByClassName('bandcampBtn')[0].innerHTML = 'Refresh Window In a Few Seconds'
           }
         }}
       >

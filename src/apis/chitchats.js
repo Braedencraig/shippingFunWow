@@ -23,6 +23,7 @@ export const createShipment = async (orderToBeShipped) => {
 
     let tshirt = false;
     let vinyl = false;
+    let cassette = false;
     let sizeX;
     let sizeY;
     let sizeZ;
@@ -32,38 +33,79 @@ export const createShipment = async (orderToBeShipped) => {
         vinyl = true;
       } else if (order.item_name.indexOf("T-Shirt") > -1) {
         tshirt = true;
+      } else if (order.item_name.indexOf("Cassette") > -1) {
+        cassette = true;
       }
 
-      if (vinyl && tshirt) {
+      if (vinyl && tshirt && !cassette) {
         sizeX = 33;
         sizeY = 33;
         sizeZ = 4;
         return "Phonographic Record & T-Shirt";
       }
 
-      if (vinyl && !tshirt) {
+      if (vinyl && !tshirt && !cassette) {
         sizeX = 33;
         sizeY = 33;
         sizeZ = 4;
         return "Phonographic Record";
       }
-      if (tshirt && !vinyl) {
+
+      if (tshirt && !vinyl && !cassette) {
         sizeX = 26;
         sizeY = 34;
         sizeZ = 4;
         return "T-Shirt";
+      }
+
+      if(!tshirt && !vinyl && cassette) {
+        sizeX = 8;
+        sizeY = 14;
+        sizeZ = 3;
+        return "Cassette";
+      }
+
+      if(tshirt && !vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "T-Shirt & Cassette";
+      }
+
+      if(!tshirt && vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record & Cassette";
+      }
+
+      if(tshirt && vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record & T-Shirt & Cassette";
       }
     });
 
     let total = 0;
     const amount = orderToBeShipped.map((order) => (total += order.quantity));
     const totalAmount = total * 25;
-
-    if (total < 4) {
+    // WITH CASSETTE
+    if(cassette && !vinyl && !tshirt) {
+      sizeZ = 3 * orderToBeShipped[0].quantity
+    }
+    if(cassette && vinyl && total <= 2 && !tshirt) {
+      sizeZ = 4
+    }
+    if(cassette && vinyl && total > 2) {
+      sizeZ = 13
+    }
+    // NO CASETTE
+    if (total < 4 && !cassette) {
       sizeZ = 4;
-    } else if (total >= 4 && total <= 20) {
+    } else if (total >= 4 && total <= 20 && !cassette) {
       sizeZ = 13;
-    } else if (total > 20) {
+    } else if (total > 20 && !cassette) {
       sizeZ = 27;
     }
 
@@ -71,11 +113,14 @@ export const createShipment = async (orderToBeShipped) => {
       let totalWeight = 0;
       let vinylAmount = 0;
       let tShirtAmount = 0;
+      let cassetteAmount = 0;
       orderToBeShipped.map((order) => {
         if (order.item_name.indexOf("Vinyl") > -1) {
           vinylAmount += order.quantity;
         } else if (order.item_name.indexOf("T-Shirt") > -1) {
           tShirtAmount += order.quantity;
+        } else if (order.item_name.indexOf("Cassette") > -1) {
+          cassetteAmount += order.quantity;
         }
       });
       if (vinylAmount > 0) {
@@ -83,6 +128,7 @@ export const createShipment = async (orderToBeShipped) => {
       }
       totalWeight += vinylAmount * 0.6;
       totalWeight += tShirtAmount * 0.23;
+      totalWeight += cassetteAmount * 0.3;
       return totalWeight;
     };
 
