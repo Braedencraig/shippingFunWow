@@ -31,7 +31,7 @@ export const createShipment = async (orderToBeShipped) => {
     const description = orderToBeShipped.map((order) => {
       if (order.item_name.indexOf("Vinyl") > -1) {
         vinyl = true;
-      } else if (order.item_name.indexOf("T-Shirt") > -1) {
+      } else if (order.item_name.indexOf("T-Shirt") > -1 || order.item_name.indexOf("T-shirt") > -1) {
         tshirt = true;
       } else if (order.item_name.indexOf("Cassette") > -1) {
         cassette = true;
@@ -117,7 +117,7 @@ export const createShipment = async (orderToBeShipped) => {
       orderToBeShipped.map((order) => {
         if (order.item_name.indexOf("Vinyl") > -1) {
           vinylAmount += order.quantity;
-        } else if (order.item_name.indexOf("T-Shirt") > -1) {
+        } else if (order.item_name.indexOf("T-Shirt") > -1 || order.item_name.indexOf("T-shirt") > -1) {
           tShirtAmount += order.quantity;
         } else if (order.item_name.indexOf("Cassette") > -1) {
           cassetteAmount += order.quantity;
