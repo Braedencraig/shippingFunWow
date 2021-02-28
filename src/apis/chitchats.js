@@ -1,9 +1,185 @@
 import axios from "axios";
 import axiosWithDelimiterFile from "../apis/axios";
 
-const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET;
-const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID;
+const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET_STAGING;
+const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID_STAGING;
 // STAGING CHANGE HERE ENV AS WELL BAND CAMP INFO
+
+export const createShipmentWebflow = async (orderToBeShipped) => {
+  try {
+    let postageType = () => {
+      if (orderToBeShipped.shippingAddress.country === "SI") {
+        return "usps_first_class_package_international_service";
+      } else if (orderToBeShipped.shippingAddress.country === "CA") {
+        return "chit_chats_canada_tracked";
+      } else if (orderToBeShipped.shippingAddress.country === "US") {
+        return "usps_media_mail";
+      } else {
+        return "asendia_priority_tracked";
+      }
+    };
+
+    let postage = postageType();
+
+    let tshirt = false;
+    let vinyl = false;
+    let cassette = false;
+    let sizeX;
+    let sizeY;
+    let sizeZ;
+
+    const description = orderToBeShipped.purchasedItems.map((item) => {
+
+      if (item.variantSKU.indexOf("LP") > -1) {
+        vinyl = true;
+      } else if (item.variantSKU.indexOf("TS") > -1) {
+        tshirt = true;
+      } else if (item.variantSKU.indexOf("CS") > -1) {
+        cassette = true;
+      }
+
+      if (vinyl && tshirt && !cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record & T-Shirt";
+      }
+
+      if (vinyl && !tshirt && !cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record";
+      }
+
+      if (tshirt && !vinyl && !cassette) {
+        sizeX = 26;
+        sizeY = 34;
+        sizeZ = 4;
+        return "T-Shirt";
+      }
+
+      if(!tshirt && !vinyl && cassette) {
+        sizeX = 8;
+        sizeY = 14;
+        sizeZ = 3;
+        return "Cassette";
+      }
+
+      if(tshirt && !vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "T-Shirt & Cassette";
+      }
+
+      if(!tshirt && vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record & Cassette";
+      }
+
+      if(tshirt && vinyl && cassette) {
+        sizeX = 33;
+        sizeY = 33;
+        sizeZ = 4;
+        return "Phonographic Record & T-Shirt & Cassette";
+      }
+    });
+
+    let total = 0;
+    const amount = orderToBeShipped.purchasedItems.map((item) => (total += item.count));
+    const totalAmount = total * 25;
+    // // WITH CASSETTE
+    if(cassette && !vinyl && !tshirt) {
+      sizeZ = 3 * orderToBeShipped.purchasedItemsCount
+    }
+    if(cassette && vinyl && total <= 2 && !tshirt) {
+      sizeZ = 4
+    }
+    if(cassette && vinyl && total > 2) {
+      sizeZ = 13
+    }
+    // NO CASETTE
+    if (total < 4 && !cassette) {
+      sizeZ = 4;
+    } else if (total >= 4 && total <= 20 && !cassette) {
+      sizeZ = 13;
+    } else if (total > 20 && !cassette) {
+      sizeZ = 27;
+    }
+
+    const weight = () => {
+      let totalWeight = 0;
+      let vinylAmount = 0;
+      let tShirtAmount = 0;
+      let cassetteAmount = 0;
+      orderToBeShipped.purchasedItems.map((item) => {
+        if (item.variantSKU.indexOf("LP") > -1) {
+          vinylAmount += item.count;
+        } else if (item.variantSKU.indexOf("TS") > -1) {
+          tShirtAmount += item.count;
+        } else if (item.variantSKU.indexOf("CS") > -1) {
+          cassetteAmount += item.count;
+        }
+      });
+      if (vinylAmount > 0) {
+        totalWeight += 0.6;
+      }
+      totalWeight += vinylAmount * 0.6;
+      totalWeight += tShirtAmount * 0.23;
+      totalWeight += cassetteAmount * 0.3;
+      return totalWeight;
+    };
+
+    let shipmentBody = {
+      name: orderToBeShipped.shippingAddress.addressee,
+      address_1: orderToBeShipped.shippingAddress.line1,
+      address_2: orderToBeShipped.shippingAddress.line2,
+      city: orderToBeShipped.shippingAddress.city,
+      province_code: orderToBeShipped.shippingAddress.state,
+      postal_code: orderToBeShipped.shippingAddress.postalCode,
+      country_code: orderToBeShipped.shippingAddress.country,
+      package_contents: "merchandise",
+      description: description.slice(-1)[0],
+      value: totalAmount,
+      value_currency: orderToBeShipped.netAmount.unit,
+      order_store: "other",
+      order_id: orderToBeShipped.orderId,
+      package_type: "parcel",
+      size_x: sizeX,
+      size_y: sizeY,
+      size_z: sizeZ,
+      weight: weight().toFixed(2),
+      size_unit: "cm",
+      weight_unit: "lb",
+      signature_requested: false,
+      insurance_requested: "no",
+      ship_date: "today",
+      postage_type: postage,
+    };
+
+    const res = await axiosWithDelimiterFile.post(
+      `/clients/${chitChatClientId}/shipments`,
+      shipmentBody,
+      {
+        headers: {
+          Authorization: chitChatTkn,
+        },
+      }
+    );
+
+    return {
+      id: res.data.shipment.id,
+      tracking: res.data.shipment.tracking_url,
+      rates: res.data.shipment.rates,
+      name: orderToBeShipped.shippingAddress.addressee,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const createShipment = async (orderToBeShipped) => {
   try {

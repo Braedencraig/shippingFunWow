@@ -93,6 +93,10 @@ button:hover {
   justify-content: center;
 }
 
+.btn {
+  margin-bottom: 40px;
+}
+
 .loadingDisplay {
   flex-direction: column;
 }
@@ -149,4 +153,22 @@ button.processOrder {
   padding: 5px;
   font-size: 14px;
   margin-top: 5px;
+}
+
+nav {
+  text-align: center;
+  margin-bottom: 40px;
+  color: black;
+}
+
+li {
+  list-style-type: none;
+  color: black;
+  font-size: 30px;
+}
+
+a {
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
 }

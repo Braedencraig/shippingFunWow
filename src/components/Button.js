@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useStoreState } from "easy-peasy";
 import PdfGenerator from "../components/PdfGenerator";
+import PdfGeneratorWebflow from "../components/PdfGeneratorWebflow";
 
-const Button = () => {
+
+const Button = ({ webflow }) => {
   const [count, setCount] = useState(0);
   const [confirm, setConfirm] = useState(false);
   const prevCountRef = useRef();
@@ -27,7 +29,8 @@ const Button = () => {
       >
         Create Shipping Download For All Orders
       </button>
-      {count > 0 && confirm && <PdfGenerator urls={urls} info={info} />}
+      {webflow && count > 0 && confirm && <PdfGeneratorWebflow urls={urls} info={info} /> }
+      {!webflow && count > 0 && confirm && <PdfGenerator urls={urls} info={info} />}
     </div>
   );
 };

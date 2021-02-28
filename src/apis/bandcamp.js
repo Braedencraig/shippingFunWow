@@ -52,7 +52,6 @@ export const getOrdersUnshipped = async (token, bands) => {
       params,
       config
     );
-    console.log(allOrders)
     return allOrders;
   } catch (error) {
     console.log(error);

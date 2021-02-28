@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { action, createStore, StoreProvider, useStoreState } from "easy-peasy";
 import { getCredentials, getBands, getOrdersUnshipped } from "./apis/bandcamp";
 import { getAllShipments } from "./apis/chitchats";
+import { getOrdersUnshippedWebflow } from './apis/webflow'
 
 import Card from "./components/Card";
+import WebflowCard from "./components/WebflowCard";
 import Button from "./components/Button";
 import BandcampButton from "./components/BandcampButton";
-
+import WebflowButton from "./components/WebflowButton";
 import Spinner from "./spinner.gif";
 import "./App.css";
 
 require("dotenv").config();
 
-function App() {
+function App() {  
   const [unfilledOrders, setUnfilledOrders] = useState(null);
+  const [unfilledWebflowOrders, setUnfilledWebflowOrders] = useState(null);
   const [confirmCreateShipment, setConfirmCreateShipment] = useState(false);
   const [token, setToken] = useState("");
   const [getShip, setGetShip] = useState(null);
@@ -34,6 +38,9 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
+      const webflowOrders = await getOrdersUnshippedWebflow()
+      setUnfilledWebflowOrders(webflowOrders)
+
       const ship = await getAllShipments();
       setGetShip(ship);
       const clientCreds = await getCredentials();
@@ -54,7 +61,10 @@ function App() {
         setUnfilledOrders(filteredOutSkip);
       }
     }
+    console.log(window)
     fetchData();
+  
+
   }, [setToken, setUnfilledOrders, setGetShip, setBandcampError]);
 
   if (bandcampError) {
@@ -73,46 +83,99 @@ function App() {
 
   return (
     <div className="App">
+      <BrowserRouter>
+      <Switch>
       <StoreProvider store={store}>
         <div className="toBeShipped">
-          <h2>
-            Orders To Be Shipped:{" "}
-            {unfilledOrders === null ? "" : unfilledOrders.length}
-          </h2>
-          <div className="btn">
-            <button
-              onClick={() => {
-                const result = window.confirm("Select all shipments?");
-                setConfirmCreateShipment(result);
-              }}
-            >
-              Select All Shipments For Processing
-            </button>
-          </div>
-          <div className="orderFlex">
-            {unfilledOrders &&
-              unfilledOrders.map((orderToBeShipped, idx) => {
-                return (
-                  <Card
-                    key={orderToBeShipped[0].sale_item_id}
-                    orderToBeShipped={orderToBeShipped}
-                    idx={idx}
-                    shipments={getShip}
-                    confirmCreateShipment={confirmCreateShipment}
-                  />
-                );
-              })}
-          </div>
-          <div className="serious">
-            <Button />
-            <BandcampButton
-              unfilledOrders={unfilledOrders}
-              token={token}
-              shipments={getShip}
-            />
-          </div>
+          <nav>
+            <ul>
+               <li><a href="/bandcamp">Bandcamp Orders</a></li>
+              <li><a href="/webflow">Webflow Orders</a></li>
+          </ul>
+        </nav>
+          
+        
+          <Route path="/bandcamp">
+            <h2>
+              Orders To Be Shipped:{" "}
+              {unfilledOrders === null ? "" : unfilledOrders.length}
+            </h2>
+            <div className="btn">
+              <button
+                onClick={() => {
+                  const result = window.confirm("Select all shipments?");
+                  setConfirmCreateShipment(result);
+                }}
+              >
+                Select All Shipments For Processing
+              </button>
+            </div>
+            <div className="orderFlex">
+              {unfilledOrders &&
+                unfilledOrders.map((orderToBeShipped, idx) => {
+                  return (
+                    <Card
+                      key={orderToBeShipped[0].sale_item_id}
+                      orderToBeShipped={orderToBeShipped}
+                      idx={idx}
+                      shipments={getShip}
+                      confirmCreateShipment={confirmCreateShipment}
+                    />
+                  );
+                })}
+            </div>
+            <div className="serious">
+              <Button />
+              <BandcampButton
+                unfilledOrders={unfilledOrders}
+                token={token}
+                shipments={getShip}
+              />
+            </div>
+          </Route>
+
+          <Route path="/webflow">
+            <div className="orderFlex">
+              <h2>
+              Orders To Be Shipped:{" "}
+              {unfilledWebflowOrders === null ? "" : unfilledWebflowOrders.data.length}
+              </h2>
+              <div className="btn">
+                <button
+                  onClick={() => {
+                    const result = window.confirm("Select all shipments?");
+                    setConfirmCreateShipment(result);
+                  }}
+                >
+                  Select All Shipments For Processing
+                </button>
+              </div>
+              {unfilledWebflowOrders &&
+                unfilledWebflowOrders.data.map((orderToBeShipped, idx) => {
+                  return (
+                    <WebflowCard
+                      key={orderToBeShipped.orderId}
+                      orderToBeShipped={orderToBeShipped}
+                      idx={idx}
+                      shipments={getShip}
+                      confirmCreateShipment={confirmCreateShipment}
+                    />
+                  );
+                })}
+            </div>
+            <div className="serious">
+              <Button webflow />
+              <WebflowButton
+                unfilledOrders={unfilledWebflowOrders}
+                shipments={getShip}
+              />
+            </div>
+          </Route>
+
         </div>
       </StoreProvider>
+      </Switch>
+      </BrowserRouter>
     </div>
   );
 }
