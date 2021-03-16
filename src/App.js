@@ -10,7 +10,7 @@ import WebflowCard from "./components/WebflowCard";
 import Button from "./components/Button";
 import BandcampButton from "./components/BandcampButton";
 import WebflowButton from "./components/WebflowButton";
-import Spinner from "./spinner.gif";
+import Spinner from "./logoidee.svg";
 import "./App.css";
 
 require("dotenv").config();
@@ -61,7 +61,6 @@ function App() {
         setUnfilledOrders(filteredOutSkip);
       }
     }
-    console.log(window)
     fetchData();
   
 
@@ -134,7 +133,7 @@ function App() {
             </div>
           </Route>
 
-          <Route path="/webflow">
+          {/* <Route path="/webflow">
             <div className="orderFlex">
               <h2>
               Orders To Be Shipped:{" "}
@@ -170,7 +169,7 @@ function App() {
                 shipments={getShip}
               />
             </div>
-          </Route>
+          </Route> */}
 
         </div>
       </StoreProvider>

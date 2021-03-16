@@ -1,8 +1,8 @@
 import axios from "axios";
 import axiosWithDelimiterFile from "../apis/axios";
 
-const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET_STAGING;
-const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID_STAGING;
+const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET;
+const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID;
 // STAGING CHANGE HERE ENV AS WELL BAND CAMP INFO
 
 export const createShipmentWebflow = async (orderToBeShipped) => {
@@ -184,7 +184,7 @@ export const createShipmentWebflow = async (orderToBeShipped) => {
 export const createShipment = async (orderToBeShipped) => {
   try {
     let postageType = () => {
-      if (orderToBeShipped[0].ship_to_country_code === "SI") {
+      if (orderToBeShipped[0].ship_to_country_code === "SI" || orderToBeShipped[0].ship_to_country_code === "HR") {
         return "usps_first_class_package_international_service";
       } else if (orderToBeShipped[0].ship_to_country_code === "CA") {
         return "chit_chats_canada_tracked";
@@ -346,12 +346,16 @@ export const createShipment = async (orderToBeShipped) => {
       }
     );
 
-    return {
-      id: res.data.shipment.id,
-      tracking: res.data.shipment.tracking_url,
-      rates: res.data.shipment.rates,
-      name: orderToBeShipped[0].ship_to_name,
-    };
+    if(res.status == 201) {
+      return {
+        id: res.data.shipment.id,
+        tracking: res.data.shipment.tracking_url,
+        rates: res.data.shipment.rates,
+        name: orderToBeShipped[0].ship_to_name,
+      };
+    } else {
+      return "Something went wrong"
+    }
   } catch (error) {
     console.log(error);
   }

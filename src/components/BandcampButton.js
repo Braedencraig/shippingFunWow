@@ -19,7 +19,11 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
                 markShipped(token, shipment.order_id, shipment.tracking_url);
               }
             });
-            document.getElementsByClassName('bandcampBtn')[0].innerHTML = 'Refresh Window In a Few Seconds'
+            document.getElementsByClassName('bandcampBtn')[0].innerHTML = 'Making calls...please wait'
+            setTimeout(() => {
+              document.getElementsByClassName('bandcampBtn')[0].innerHTML = 'You may refresh the page now'
+            }, 30000)
+
           }
         }}
       >

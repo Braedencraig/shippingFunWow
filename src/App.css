@@ -80,10 +80,10 @@ button:hover {
   margin-bottom: 20px;
 }
 
-.orderFlex img {
+/* .orderFlex img {
   width: 200px;
   height: 200px;
-}
+} */
 
 .btn,
 .loadingDisplay,
@@ -121,7 +121,7 @@ button:hover {
   font-size: 18px;
   position: absolute;
   font-weight: bold;
-  bottom: -15px;
+  bottom: 100px;
   left: 20px;
 }
 
@@ -171,4 +171,16 @@ a {
   color: black;
   font-size: 30px;
   font-weight: bold;
+}
+
+.blank-out {
+  pointer-events: none;
+  background: grey;
+  opacity: 0.5;
+}
+
+.manual-complete {
+  pointer-events: none;
+  background: red;
+  opacity: 0.5;
 }

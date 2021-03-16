@@ -6,7 +6,7 @@ import PdfGeneratorWebflow from "../components/PdfGeneratorWebflow";
 
 const Button = ({ webflow }) => {
   const [count, setCount] = useState(0);
-  const [confirm, setConfirm] = useState(false);
+  const [confirm, setConfirm] = useState(true);
   const prevCountRef = useRef();
   useEffect(() => {
     prevCountRef.current = count;
@@ -20,11 +20,7 @@ const Button = ({ webflow }) => {
     <div className="pdfGeneration">
       <button
         onClick={() => {
-          setCount((prevState) => prevState + 1);
-          const result = window.confirm(
-            "Process PDFSs and Packing Slips For All Selected Shipments?"
-          );
-          setConfirm(result);
+          setCount((prevState) => prevState + 1)
         }}
       >
         Create Shipping Download For All Orders

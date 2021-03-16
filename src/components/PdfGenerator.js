@@ -80,8 +80,10 @@ const PdfGenerator = ({ urls, info }) => {
     },
     image: {
       marginVertical: -100,
-      marginHorizontal: 100,
+      marginHorizontal: 150,
       transform: "rotate(90deg)",
+      height: 500,
+      width: 300
     },
   });
   const todayDate = new Date().toISOString().slice(0,10);
