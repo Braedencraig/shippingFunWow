@@ -77,11 +77,15 @@ const PdfGeneratorWebflow = ({ urls, info }) => {
       fontSize: 12,
       textAlign: "center",
       marginBottom: 10,
+      width: '80%',
+      marginHorizontal: 'auto'
     },
     image: {
-      marginVertical: -100,
-      marginHorizontal: 100,
+      marginVertical: -5,
+      marginHorizontal: 150,
       transform: "rotate(90deg)",
+      height: 500,
+      width: 300
     },
   });
   const todayDate = new Date().toISOString().slice(0,10);

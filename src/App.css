@@ -37,15 +37,25 @@ input {
 .order {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   border: 10px solid black;
   margin-bottom: 20px;
   padding: 20px;
   width: 25%;
+  position: relative;
+  overflow: hidden;
+}
+
+.date {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
 }
 
 .complete {
   background: rgba(34, 139, 34, 0.5);
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .selected {
@@ -162,9 +172,8 @@ nav {
 }
 
 li {
-  list-style-type: none;
   color: black;
-  font-size: 30px;
+  font-size: 20px;
 }
 
 a {
@@ -179,8 +188,33 @@ a {
   opacity: 0.5;
 }
 
+.pdf-ready {
+  background: yellow;
+  opacity: 0.5;
+}
+
 .manual-complete {
   pointer-events: none;
   background: red;
   opacity: 0.5;
+}
+
+img {
+  height: 100px;
+}
+
+.tiny-btn {
+  width: 170px;
+  font-size: 10px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+
+.divider {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  height: 10px;
+  width: 100%;
+  background: black;
 }

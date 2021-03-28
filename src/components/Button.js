@@ -4,7 +4,7 @@ import PdfGenerator from "../components/PdfGenerator";
 import PdfGeneratorWebflow from "../components/PdfGeneratorWebflow";
 
 
-const Button = ({ webflow }) => {
+const Button = ({ webflow, single }) => {
   const [count, setCount] = useState(0);
   const [confirm, setConfirm] = useState(true);
   const prevCountRef = useRef();
@@ -16,6 +16,9 @@ const Button = ({ webflow }) => {
   let urls = useStoreState((state) => state.pngs.urls);
   let info = useStoreState((state) => state.pngs.info);
 
+  let webflowurls = useStoreState((state) => state.webflowPngs.urls);
+  let webflowinfo = useStoreState((state) => state.webflowPngs.info);
+
   return (
     <div className="pdfGeneration">
       <button
@@ -25,7 +28,7 @@ const Button = ({ webflow }) => {
       >
         Create Shipping Download For All Orders
       </button>
-      {webflow && count > 0 && confirm && <PdfGeneratorWebflow urls={urls} info={info} /> }
+      {webflow && count > 0 && confirm && <PdfGeneratorWebflow urls={webflowurls} info={webflowinfo} /> }
       {!webflow && count > 0 && confirm && <PdfGenerator urls={urls} info={info} />}
     </div>
   );

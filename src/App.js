@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { action, createStore, StoreProvider, useStoreState } from "easy-peasy";
 import { getCredentials, getBands, getOrdersUnshipped } from "./apis/bandcamp";
 import { getAllShipments } from "./apis/chitchats";
@@ -25,6 +25,16 @@ function App() {
 
   const store = createStore({
     pngs: {
+      urls: [],
+      info: [],
+      add: action((state, payload) => {
+        state.urls.push(payload);
+      }),
+      addInfo: action((state, payload) => {
+        state.info.push(payload);
+      }),
+    },
+    webflowPngs: {
       urls: [],
       info: [],
       add: action((state, payload) => {
@@ -80,26 +90,27 @@ function App() {
     );
   }
 
+
   return (
     <div className="App">
-      <BrowserRouter>
-      <Switch>
+      {/* <BrowserRouter>
+      <Switch> */}
       <StoreProvider store={store}>
         <div className="toBeShipped">
-          <nav>
+          {/* <nav>
             <ul>
                <li><a href="/bandcamp">Bandcamp Orders</a></li>
               <li><a href="/webflow">Webflow Orders</a></li>
           </ul>
-        </nav>
+        </nav> */}
           
         
-          <Route path="/bandcamp">
+          {/* <Route path="/bandcamp"> */}
             <h2>
-              Orders To Be Shipped:{" "}
+              Bandcamp Orders To Be Shipped:{" "}
               {unfilledOrders === null ? "" : unfilledOrders.length}
             </h2>
-            <div className="btn">
+            {/* <div className="btn">
               <button
                 onClick={() => {
                   const result = window.confirm("Select all shipments?");
@@ -108,7 +119,7 @@ function App() {
               >
                 Select All Shipments For Processing
               </button>
-            </div>
+            </div> */}
             <div className="orderFlex">
               {unfilledOrders &&
                 unfilledOrders.map((orderToBeShipped, idx) => {
@@ -131,23 +142,25 @@ function App() {
                 shipments={getShip}
               />
             </div>
-          </Route>
+          {/* </Route> */}
 
-          {/* <Route path="/webflow">
+          <div className="divider"></div>
+
+          {/* <Route path="/webflow"> */}
             <div className="orderFlex">
               <h2>
-              Orders To Be Shipped:{" "}
+              Webflow Orders To Be Shipped:{" "}
               {unfilledWebflowOrders === null ? "" : unfilledWebflowOrders.data.length}
               </h2>
               <div className="btn">
-                <button
+                {/* <button
                   onClick={() => {
                     const result = window.confirm("Select all shipments?");
                     setConfirmCreateShipment(result);
                   }}
                 >
                   Select All Shipments For Processing
-                </button>
+                </button> */}
               </div>
               {unfilledWebflowOrders &&
                 unfilledWebflowOrders.data.map((orderToBeShipped, idx) => {
@@ -169,12 +182,12 @@ function App() {
                 shipments={getShip}
               />
             </div>
-          </Route> */}
+          {/* </Route> */}
 
         </div>
       </StoreProvider>
-      </Switch>
-      </BrowserRouter>
+      {/* </Switch>
+      </BrowserRouter> */}
     </div>
   );
 }

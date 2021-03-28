@@ -77,9 +77,11 @@ const PdfGenerator = ({ urls, info }) => {
       fontSize: 12,
       textAlign: "center",
       marginBottom: 10,
+      width: '80%',
+      marginHorizontal: 'auto'
     },
     image: {
-      marginVertical: -100,
+      marginVertical: -5,
       marginHorizontal: 150,
       transform: "rotate(90deg)",
       height: 500,
@@ -89,11 +91,13 @@ const PdfGenerator = ({ urls, info }) => {
   const todayDate = new Date().toISOString().slice(0,10);
 
   return (
-    <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
-      {({ blob, url, loading, error }) =>
-        loading ? "Loading document..." : "Download now!"
-      }
-    </PDFDownloadLink>
+    <>
+      <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
+        {({ blob, url, loading, error }) =>
+          loading ? "Loading document..." : "Download now!"
+        }
+      </PDFDownloadLink>
+    </>
   );
 };
 
