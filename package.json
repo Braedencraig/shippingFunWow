@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.4.0",
     "@nutriot/bandcamp-api": "^0.3.0",
     "@react-pdf/renderer": "^1.6.12",
     "@testing-library/jest-dom": "^5.11.6",
