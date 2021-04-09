@@ -150,7 +150,7 @@ function App() {
             <div className="orderFlex">
               <h2>
               Webflow Orders To Be Shipped:{" "}
-              {unfilledWebflowOrders === null ? "" : unfilledWebflowOrders.data.length}
+              {unfilledWebflowOrders === null || unfilledWebflowOrders === undefined  ? "" : unfilledWebflowOrders.length}
               </h2>
               <div className="btn">
                 {/* <button
@@ -163,7 +163,7 @@ function App() {
                 </button> */}
               </div>
               {unfilledWebflowOrders &&
-                unfilledWebflowOrders.data.map((orderToBeShipped, idx) => {
+                unfilledWebflowOrders.map((orderToBeShipped, idx) => {
                   return (
                     <WebflowCard
                       key={orderToBeShipped.orderId}

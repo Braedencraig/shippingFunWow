@@ -15,7 +15,8 @@ export const getOrdersUnshippedWebflow = async () => {
         `https://api.webflow.com/sites/${webflowSiteId}/orders`,
         config
       );
-      return allOrders;
+      const unfulfilled = await allOrders.data.filter(order => order.status === "unfulfilled")
+      return unfulfilled;
     } catch (error) {
       console.log(error);
     }
