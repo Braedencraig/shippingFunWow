@@ -189,8 +189,9 @@ a {
 }
 
 .pdf-ready {
-  background: yellow;
-  opacity: 0.5;
+  /* background: yellow; */
+  background: rgba(34, 139, 34, 0.5);
+  /* opacity: 0.5; */
 }
 
 .manual-complete {
