@@ -183,9 +183,9 @@ a {
 }
 
 .blank-out {
-  pointer-events: none;
+  /* pointer-events: none; */
   background: grey;
-  opacity: 0.5;
+  /* opacity: 0.5; */
 }
 
 .pdf-ready {

@@ -116,19 +116,31 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
     );
   }
 
-  if(preorder) {
-    return (
-        <div key={orderToBeShipped[0].sale_item_id} className={`order blank-out`}>
-          <span className="date">{orderToBeShipped[0].order_date.substring(0, orderToBeShipped[0].order_date.length - 12)}</span>
-          <p>Name: {orderToBeShipped[0].ship_to_name}</p>
-          <p>Country: {orderToBeShipped[0].ship_to_country}</p>
-          <div className="flexContainer">
-            <p>Items</p>
-            <ul>{item}</ul>
-          </div>
-        </div>
-      );
-  }
+  // if(preorder) {
+  //   return (
+  //       <div key={orderToBeShipped[0].sale_item_id} className={`order blank-out`}>
+  //         <span className="date">{orderToBeShipped[0].order_date.substring(0, orderToBeShipped[0].order_date.length - 12)}</span>
+  //         <p>Name: {orderToBeShipped[0].ship_to_name}</p>
+  //         <p>Country: {orderToBeShipped[0].ship_to_country}</p>
+  //         <div className="flexContainer">
+  //           <p>Items</p>
+  //           <ul>{item}</ul>
+  //         </div>
+  //         <div className="individualShip">
+  //         <>
+  //             <p className="tinyText">Process Individual Shipment</p>
+  //             <input
+  //               className="checkbox"
+  //               onClick={handleClick}
+  //               onChange={() => (confirmCreateShipment = true)}
+  //               checked={checked}
+  //               type="checkbox"
+  //             />
+  //         </>
+  //       </div>
+  //       </div>
+  //     );
+  // }
 
   if (noShow) {
     return (
@@ -166,7 +178,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
     return (
       <div
         key={orderToBeShipped[0].sale_item_id}
-        className={`order ${complete ? "complete" : ""} ${checked ? 'pdf-ready' : ''}`}
+        className={`order ${complete ? "complete" : ""} ${checked ? 'pdf-ready' : ''} ${preorder ? "blank-out" : ''}`}
       >
         <span className="date">{orderToBeShipped[0].order_date.substring(0, orderToBeShipped[0].order_date.length - 12)}</span>
         <p>Name: {orderToBeShipped[0].ship_to_name}</p>
