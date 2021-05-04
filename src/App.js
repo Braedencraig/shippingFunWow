@@ -91,6 +91,7 @@ function App() {
   }
 
 
+
   return (
     <div className="App">
       {/* <BrowserRouter>
@@ -130,17 +131,18 @@ function App() {
                       idx={idx}
                       shipments={getShip}
                       confirmCreateShipment={confirmCreateShipment}
+                      token={token}
                     />
                   );
                 })}
             </div>
             <div className="serious">
               <Button />
-              <BandcampButton
+              {/* <BandcampButton
                 unfilledOrders={unfilledOrders}
                 token={token}
                 shipments={getShip}
-              />
+              /> */}
             </div>
           {/* </Route> */}
 

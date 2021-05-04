@@ -83,6 +83,7 @@ export const getAllRecentOrders = async (token, bands) => {
 };
 
 export const markAsShipped = async (token, id, trackingUrl) => {
+  // ADD CHECK HERE TO SEE IF ORDER IS MARKED A SHIPPED OR NOT IF ORDER IS NOT YET SHIPPED THEN DO THIS.
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
@@ -103,7 +104,8 @@ export const markAsShipped = async (token, id, trackingUrl) => {
       params,
       config
     );
-    return shippedOrder;
+    // return shippedOrder;
+    return true
   } catch (error) {
     console.log(error);
   }

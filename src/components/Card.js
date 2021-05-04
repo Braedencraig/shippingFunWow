@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useStoreActions } from "easy-peasy";
 import Button from './Button'
 import { createShipment, buyShipment, getShipment } from "../apis/chitchats";
+import { markAsShipped } from "../apis/bandcamp";
+
 import Spinner from "../logoidee.svg";
 import PropTypes from "prop-types";
 
-const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
+const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }) => {
   const [rates, setRates] = useState([]);
   const [shipId, setShipId] = useState("");
   const [name, setName] = useState("");
   const [invalidRate, setInvalidRate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [checkedShip, setCheckedShip] = useState(false);
+  const [removeShip, setRemoveShip] = useState(false);
+
   const [complete, setComplete] = useState(false);
   const [noShow, setNoShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
@@ -21,6 +26,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
 
 
   const handleClick = () => setChecked(!checked);
+  const handleClickShip = () => setCheckedShip(!checkedShip);
 
   const add = useStoreActions((actions) => actions.pngs.add);
   const addInfo = useStoreActions((actions) => actions.pngs.addInfo);
@@ -76,6 +82,18 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
       createShipmentFunc(orderToBeShipped);
       addInfo(orderToBeShipped);
     }
+
+    if(checkedShip) {
+      console.log(orderToBeShipped)
+      shipments.data.map(async (shipment) => {
+        if (shipment.status === "inducted" || shipment.status === "received" || shipment.status === "released") {
+          const test = await markAsShipped(token, orderToBeShipped[0].payment_id, shipment.tracking_url);
+          if(test) {
+            setRemoveShip(true)
+          }
+        }
+      });
+    }
     // REMOVE FOR STAGING HERE
     if (shipments) {
       shipments.data.map((test) => {
@@ -96,6 +114,10 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
     setLoading,
     setChecked,
     checked,
+    checkedShip,
+    removeShip,
+    setRemoveShip,
+    setCheckedShip,
     setComplete,
     setNoShow,
     setConfirm,
@@ -164,6 +186,19 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
             }
           });
         }}>{!added ? 'Add label for download' : 'Added'}</button>
+        {!removeShip && (
+          <div className="individualShip">
+            <>
+                <p className="tinyText">Mark Order As Shipped</p>
+                <input
+                  className="checkbox"
+                  onClick={handleClickShip}
+                  checked={checkedShip}
+                  type="checkbox"
+                />
+            </>
+          </div>
+        )}
       </div>
     );
   }
