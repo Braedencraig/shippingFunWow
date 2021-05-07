@@ -84,14 +84,18 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
     }
 
     if(checkedShip) {
-      console.log(orderToBeShipped)
       shipments.data.map(async (shipment) => {
-        if (shipment.status === "inducted" || shipment.status === "received" || shipment.status === "released") {
-          const test = await markAsShipped(token, orderToBeShipped[0].payment_id, shipment.tracking_url);
-          if(test) {
-            setRemoveShip(true)
-          }
+        if(orderToBeShipped[0].payment_id == shipment.order_id) {
+          markAsShipped(token, orderToBeShipped[0].payment_id, shipment.tracking_url)
         }
+        // setRemoveShip(true)
+        // console.log(shipment.tracking_url)
+        // if (shipment.status === "inducted" || shipment.status === "received" || shipment.status === "released") {
+        //   const test = await markAsShipped(token, orderToBeShipped[0].payment_id, shipment.tracking_url);
+        //   if(test) {
+        //     setRemoveShip(true)
+        //   }
+        // }
       });
     }
     // REMOVE FOR STAGING HERE
@@ -194,6 +198,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
                   className="checkbox"
                   onClick={handleClickShip}
                   checked={checkedShip}
+                  disabled={checkedShip}
                   type="checkbox"
                 />
             </>
