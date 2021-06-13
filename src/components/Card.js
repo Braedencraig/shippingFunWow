@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useStoreActions } from "easy-peasy";
+import { useStoreActions, useStoreState } from "easy-peasy";
 import Button from './Button'
 import { createShipment, buyShipment, getShipment } from "../apis/chitchats";
 import { markAsShipped } from "../apis/bandcamp";
@@ -31,6 +31,9 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
   const add = useStoreActions((actions) => actions.pngs.add);
   const addInfo = useStoreActions((actions) => actions.pngs.addInfo);
 
+  // TEST NUMBER
+  const addError = useStoreActions((actions) => actions.todos.add);
+
   const item = orderToBeShipped.map((item) => {
     return (
       <li key={item.sale_item_id}>
@@ -45,6 +48,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
   const createShipmentFunc = async (orderToBeShipped) => {
     const shipment = await createShipment(orderToBeShipped);
     if(shipment === "Something went wrong" || shipment === undefined) {
+      addError('Error')
       setCannotProcess(true)
     } else {
       if (shipment.id) {
@@ -58,6 +62,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
                 getShipmentInfo.then((info) => {
                   setLoading(false);
                   add(info.data.shipment.postage_label_png_url);
+                  addInfo(orderToBeShipped);
                   setComplete(true);
                 });
               }, 10000);
@@ -80,7 +85,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
     }
     if (checked) {
       createShipmentFunc(orderToBeShipped);
-      addInfo(orderToBeShipped);
+      // addInfo(orderToBeShipped); TESTING RED
     }
 
     if(checkedShip) {
@@ -238,6 +243,8 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
               />
           </>
         </div>
+        <div>
+    </div>
       </div>
     );
   }

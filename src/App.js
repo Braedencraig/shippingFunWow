@@ -44,7 +44,14 @@ function App() {
         state.info.push(payload);
       }),
     },
+    todos: {
+      items: [],
+      add: action((state, payload) => {
+        state.items.push(payload);
+      }),
+    },
   });
+
 
   useEffect(() => {
     async function fetchData() {
@@ -72,7 +79,6 @@ function App() {
       }
     }
     fetchData();
-  
 
   }, [setToken, setUnfilledOrders, setGetShip, setBandcampError]);
 

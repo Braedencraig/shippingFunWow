@@ -11,7 +11,9 @@ import {
 } from "@react-pdf/renderer";
 import logo from "../logo.svg";
 
-const PdfGenerator = ({ urls, info }) => {
+const PdfGenerator = ({ errors, urls, info }) => {
+
+  console.log(errors)
   
   info.map((order, i) => {
     order.url = urls[i];
@@ -92,6 +94,7 @@ const PdfGenerator = ({ urls, info }) => {
 
   return (
     <>
+     <div className="errors">Errors {errors.length}</div>
       <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
         {({ blob, url, loading, error }) =>
           loading ? "Loading document..." : "Download now!"

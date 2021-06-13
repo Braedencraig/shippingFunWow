@@ -194,6 +194,15 @@ a {
   /* opacity: 0.5; */
 }
 
+.errors {
+  position: absolute;
+  top: -7px;
+  right: 25px;
+  font-weight: bold;
+  color: red;
+  font-size: 20px;
+}
+
 .manual-complete {
   pointer-events: none;
   background: red;

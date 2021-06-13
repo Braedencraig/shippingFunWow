@@ -19,6 +19,8 @@ const Button = ({ webflow, single }) => {
   let webflowurls = useStoreState((state) => state.webflowPngs.urls);
   let webflowinfo = useStoreState((state) => state.webflowPngs.info);
 
+  let errors = useStoreState((state) => state.todos.items);
+
   return (
     <div className="pdfGeneration">
       <button
@@ -29,7 +31,7 @@ const Button = ({ webflow, single }) => {
         Create Shipping Download For All Orders
       </button>
       {webflow && count > 0 && confirm && <PdfGeneratorWebflow urls={webflowurls} info={webflowinfo} /> }
-      {!webflow && count > 0 && confirm && <PdfGenerator urls={urls} info={info} />}
+      {!webflow && count > 0 && confirm && <PdfGenerator errors={errors} urls={urls} info={info} />}
     </div>
   );
 };
