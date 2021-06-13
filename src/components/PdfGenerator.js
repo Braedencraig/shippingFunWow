@@ -12,8 +12,6 @@ import {
 import logo from "../logo.svg";
 
 const PdfGenerator = ({ errors, urls, info }) => {
-
-  console.log(errors)
   
   info.map((order, i) => {
     order.url = urls[i];

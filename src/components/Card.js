@@ -108,7 +108,7 @@ const Card = ({ confirmCreateShipment, orderToBeShipped, idx, shipments, token }
       shipments.data.map((test) => {
         if (parseInt(test.order_id) === orderToBeShipped[0].payment_id) {
           setNoShow(true);
-          if(test.status == "refund_approved") {
+          if(test.status == "refund_approved" || test.status == "refund_requested") {
             setNoShow(false);
           }
         }
