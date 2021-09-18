@@ -39,12 +39,13 @@ export const getBands = async (token) => {
 // band_id: bands.data.bands[0].band_id,
 // STAGING CHANGE HERE 0 staging, 2 live.
 export const getOrdersUnshipped = async (token, bands) => {
+  console.log(bands.data.bands)
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
     const params = {
-      band_id: bands.data.bands[2].band_id,
+      band_id: bands.data.bands[1].band_id,
       unshipped_only: true,
     };
     const allOrders = await axios.post(
