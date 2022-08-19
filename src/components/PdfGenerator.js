@@ -1,18 +1,8 @@
-import React, { useEffect } from "react";
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  Image,
-  PDFDownloadLink,
-  Font,
-} from "@react-pdf/renderer";
-import logo from "../logo.svg";
+import React from "react";
+import { Page, Text, View, Document, StyleSheet, Image, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
 const PdfGenerator = ({ errors, urls, info }) => {
-  
+  // This component handles generation and download of pdfs/shipping labels
   info.map((order, i) => {
     order.url = urls[i];
   });
@@ -27,17 +17,9 @@ const PdfGenerator = ({ errors, urls, info }) => {
               <Text style={styles.title}>Packing List</Text>
               {order.map((item) => {
                 if (item.quantity > 1) {
-                  return (
-                    <Text
-                      style={styles.highlight}
-                    >{`Quanity: ${item.quantity}, Item: ${item.option !== null ? item.option : ''} - ${item.item_name}`}</Text>
-                  );
+                  return <Text style={styles.highlight}>{`Quanity: ${item.quantity}, Item: ${item.option !== null ? item.option : ""} - ${item.item_name}`}</Text>;
                 } else {
-                  return (
-                    <Text
-                      style={styles.text}
-                    >{`Quanity: ${item.quantity}, Item:  ${item.option !== null ? item.option : ''} - ${item.item_name}`}</Text>
-                  );
+                  return <Text style={styles.text}>{`Quanity: ${item.quantity}, Item:  ${item.option !== null ? item.option : ""} - ${item.item_name}`}</Text>;
                 }
               })}
             </Page>
@@ -77,27 +59,25 @@ const PdfGenerator = ({ errors, urls, info }) => {
       fontSize: 12,
       textAlign: "center",
       marginBottom: 10,
-      width: '80%',
-      marginHorizontal: 'auto'
+      width: "80%",
+      marginHorizontal: "auto",
     },
     image: {
       marginVertical: -5,
       marginHorizontal: 150,
       transform: "rotate(90deg)",
       height: 500,
-      width: 300
+      width: 300,
     },
   });
-  const todayDate = new Date().toISOString().slice(0,10);
+  const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
     <>
-     <div className="errors">Errors {errors.length}</div>
       <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
-        {({ blob, url, loading, error }) =>
-          loading ? "Loading document..." : "Download now!"
-        }
+        {({ blob, url, loading, error }) => (loading ? "Loading..." : "Download")}
       </PDFDownloadLink>
+      <div className="errors">Errors: {errors.length}</div>
     </>
   );
 };

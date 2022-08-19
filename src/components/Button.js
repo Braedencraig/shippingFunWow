@@ -1,37 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useStoreState } from "easy-peasy";
 import PdfGenerator from "../components/PdfGenerator";
-import PdfGeneratorWebflow from "../components/PdfGeneratorWebflow";
+// import PdfGeneratorWebflow from "../components/PdfGeneratorWebflow";
 
+const Button = () => {
+  // Initial state
+  const [confirm, setConfirm] = useState(false);
 
-const Button = ({ webflow, single }) => {
-  const [count, setCount] = useState(0);
-  const [confirm, setConfirm] = useState(true);
-  const prevCountRef = useRef();
-  useEffect(() => {
-    prevCountRef.current = count;
-  }, [setCount, setConfirm]);
-  const prevCount = prevCountRef.current;
-
+  // Data from store for shipping image urls and info.
   let urls = useStoreState((state) => state.pngs.urls);
   let info = useStoreState((state) => state.pngs.info);
 
-  let webflowurls = useStoreState((state) => state.webflowPngs.urls);
-  let webflowinfo = useStoreState((state) => state.webflowPngs.info);
+  // let webflowurls = useStoreState((state) => state.webflowPngs.urls);
+  // let webflowinfo = useStoreState((state) => state.webflowPngs.info);
 
-  let errors = useStoreState((state) => state.todos.items);
+  let errors = useStoreState((state) => state.errors.items);
 
   return (
-    <div className="pdfGeneration">
+    <div className={`pdfGeneration ${urls.length === 0 ? "pdfGenerationDisabled" : ""}`}>
       <button
+        className="buttonRounded"
         onClick={() => {
-          setCount((prevState) => prevState + 1)
+          // On click we render the PdfGenerator
+          setConfirm(true);
         }}
       >
-        Create Shipping Download For All Orders
+        Generate Labels
       </button>
-      {webflow && count > 0 && confirm && <PdfGeneratorWebflow urls={webflowurls} info={webflowinfo} /> }
-      {!webflow && count > 0 && confirm && <PdfGenerator errors={errors} urls={urls} info={info} />}
+      {confirm && <PdfGenerator errors={errors} urls={urls} info={info} />}
     </div>
   );
 };

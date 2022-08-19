@@ -6,29 +6,18 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
     const markShipped = await markAsShipped(token, order_id, tracking_url);
   };
   // DONT USE SHIPMENTS USE UNFILLLED ORTDERS
-  // MOVE THIS TO SINGLE BUTTON PER BOX.
-  // console.log(unfilledOrders payment_id is how you identify whether it needs to be shipped)
-  // orderToBeShipped[0].payment_id
-  // MOVE THIS INTO BOX
-  // console.log(shipments)
 
-  console.log(unfilledOrders)
+  console.log(unfilledOrders);
 
   if (shipments) {
     return (
-      <button className="bandcampBtn"
+      <button
+        className="bandcampBtn"
         onClick={async () => {
-          const result = window.confirm(
-            "Mark All Shipments With A Status Of Inducted/Recevied/Released As Shipped Via Bandcamp?"
-          );
+          const result = window.confirm("Mark All Shipments With A Status Of Inducted/Recevied/Released As Shipped Via Bandcamp?");
           if (result) {
             // THIS NEEDS TO BE FIXED, DONT READ shipment.order_ID, read unfilledOrders.order_id ISSUE IS HERE
             shipments.data.map((shipment) => {
-              // console.log(shipment)
-              // MOVE THIS TO SINGLE BUTTON MOVE TO SINGLE BUTTON
-              // unfilledOrders.map(orderToBeShipped => {
-              //   console.log(orderToBeShipped)
-              // })
               if (shipment.status === "inducted" || shipment.status === "received" || shipment.status === "released") {
                 markShipped(token, shipment.order_id, shipment.tracking_url);
               }
@@ -37,7 +26,6 @@ export default function BandcampButton({ token, unfilledOrders, shipments }) {
             // setTimeout(() => {
             //   document.getElementsByClassName('bandcampBtn')[0].innerHTML = 'You may refresh the page now'
             // }, 30000)
-
           }
         }}
       >
