@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.3.0",
     "axios": "^0.21.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "easy-peasy": "^4.0.1",
     "eslint": "^7.18.0",
@@ -18,7 +19,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4",
-    "webflow-api": "^0.5.0"
+    "webflow-api": "^0.5.4"
   },
   "scripts": {
     "start": "react-scripts start",

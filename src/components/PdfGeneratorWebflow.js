@@ -11,8 +11,7 @@ import {
 } from "@react-pdf/renderer";
 import logo from "../logo.svg";
 
-const PdfGeneratorWebflow = ({ urls, info }) => {
-  
+const PdfGeneratorWebflow = ({ errors, urls, info }) => {
   info.map((order, i) => {
     order.url = urls[i];
   });
@@ -77,25 +76,28 @@ const PdfGeneratorWebflow = ({ urls, info }) => {
       fontSize: 12,
       textAlign: "center",
       marginBottom: 10,
-      width: '80%',
-      marginHorizontal: 'auto'
+      width: "80%",
+      marginHorizontal: "auto",
     },
     image: {
       marginVertical: -5,
       marginHorizontal: 150,
       transform: "rotate(90deg)",
       height: 500,
-      width: 300
+      width: 300,
     },
   });
-  const todayDate = new Date().toISOString().slice(0,10);
+  const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
-    <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
-      {({ blob, url, loading, error }) =>
-        loading ? "Loading document..." : "Download now!"
-      }
-    </PDFDownloadLink>
+    <>
+      <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
+        {({ blob, url, loading, error }) =>
+          loading ? "Loading document..." : "Download now!"
+        }
+      </PDFDownloadLink>
+      <div className="errors">Errors: {errors.length}</div>
+    </>
   );
 };
 

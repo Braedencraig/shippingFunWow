@@ -1,191 +1,302 @@
-// import React, { useState, useEffect } from "react";
-// import { useStoreActions } from "easy-peasy";
-// import { createShipmentWebflow, buyShipment, getShipment } from "../apis/chitchats";
-// import Spinner from "../logoidee.svg";
-// import PropTypes from "prop-types";
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
+import { useStoreActions } from "easy-peasy";
+import {
+  createShipmentWebflow,
+  buyShipment,
+  getShipment,
+} from "../apis/chitchats";
+import { markAsShippedWebflow } from "../apis/webflow";
+import Spinner from "../logoidee.svg";
 
-// const WebflowCard = ({ confirmCreateShipment, orderToBeShipped, idx, shipments }) => {
-//   const [rates, setRates] = useState([]);
-//   const [shipId, setShipId] = useState("");
-//   const [name, setName] = useState("");
-//   const [invalidRate, setInvalidRate] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [checked, setChecked] = useState(false);
-//   const [complete, setComplete] = useState(false);
-//   const [noShow, setNoShow] = useState(false);
-//   const [confirm, setConfirm] = useState(false);
-//   const [preorder, setPreorder] = useState(false);
-//   const [cannotProcess, setCannotProcess] = useState(false);
-//   const [added, setAdded] = useState(false)
+const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
+  // Initial component state
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [checkedShip, setCheckedShip] = useState(false);
+  const [removeShip, setRemoveShip] = useState(false);
+  const [complete, setComplete] = useState(false);
+  const [alreadyPurchased, setAlreadyPurchased] = useState(false);
+  const [preorder, setPreorder] = useState(false);
+  const [cannotProcess, setCannotProcess] = useState(false);
+  const [added, setAdded] = useState(false);
+  const [price, setPrice] = useState(null);
+  const [notificationSent, setNotificationSent] = useState(false);
+  const [tracking, setTracking] = useState("");
 
-//   const handleClick = () => setChecked(!checked);
+  const handleClick = () => setChecked(!checked);
+  const handleClickShip = () => {
+    setCheckedShip(!checkedShip);
+    setNotificationSent(true);
+    shipments.data.map(async (shipment) => {
+      if (shipment.order_id === orderToBeShipped.orderId) {
+        const url = `https://api.webflow.com/sites/5fd7cabbf4d7129fb098a4db/order/${orderToBeShipped.orderId}/fulfill?access_token=d6d489cda5a6d6c1b769ac8faf0e47ed66ef8ac3546962f2e859bc69800700f3`;
+        markAsShippedWebflow(
+          orderToBeShipped.orderId,
+          shipment.tracking_url,
+          url
+        );
+      }
+    });
+  };
 
-//   const add = useStoreActions((actions) => actions.webflowPngs.add);
-//   const addInfo = useStoreActions((actions) => actions.webflowPngs.addInfo);
+  // custom actions for redux store
+  const add = useStoreActions((actions) => actions.webflowPngs.add);
+  const addInfo = useStoreActions((actions) => actions.webflowPngs.addInfo);
+  const addError = useStoreActions((actions) => actions.errors.add);
 
-//   const item = orderToBeShipped.purchasedItems.map((item) => {
-//     return (
-//       <li key={orderToBeShipped.orderId}>
-//         <span className={item.count > 1 ? "highlight" : ""}>
-//           {item.count}{" "}
-//         </span>
-//         {item.productName}
-//       </li>
-//     );
-//   });
+  // A small piece of UI to render the individual items from an order
+  // Highlight the amount if quantity is more than 1 of a single thing.
+  const items = orderToBeShipped.purchasedItems.map((item) => {
+    return (
+      <li key={orderToBeShipped.orderId}>
+        <span className={`${item.count > 1 ? "highlight" : ""} quantity`}>
+          {item.count}
+        </span>
+        {item.variantName}
+      </li>
+    );
+  });
 
-//   const createShipmentFunc = async () => {
-//     const shipment = await createShipmentWebflow(orderToBeShipped);
-//     if(shipment === "error" || shipment === undefined) {
-//       setCannotProcess(true)
-//     } else {
-//       if (shipment.id) {
-//         setLoading(true);
-//         setTimeout(() => {
-//           const shipmentBought = buyShipment(shipment.id);
-//           shipmentBought.then((res) => {
-//             if (res) {
-//               setTimeout(() => {
-//                 const getShipmentInfo = getShipment(shipment.id);
-//                 getShipmentInfo.then((info) => {
-//                   setLoading(false);
-//                   add(info.data.shipment.postage_label_png_url);
-//                   setComplete(true);
-//                 });
-//               }, 10000);
-//             }
-//           });
-//         }, 9000);
-//       }
-//     }
-//   };
+  const createShipmentFunc = async (orderToBeShipped) => {
+    // Create the shipment based on information from bandcamp.
+    const shipment = await createShipmentWebflow(orderToBeShipped);
+    // Handle errors during shipment creation, if chitchats errors
+    // We add the error to the store and update UI based on setCannotProcess
+    if (shipment === "Something went wrong" || shipment === undefined) {
+      addError("Error");
+      setCannotProcess(true);
+    } else {
+      setLoading(true);
+      const shipmentBought = await buyShipment(shipment.id);
+      if (shipmentBought) {
+        // When we get the shipment after purchase so soon, the postage_label_png_url value is null
+        // We need to give chitchats time on their end to create that postage label and add it to the response object.
+        // To avoid calling the api over and over until its there, for now i'm just using a setTimeout.
+        setTimeout(async () => {
+          const getShipmentInfo = await getShipment(shipment.id);
+          setLoading(false);
+          add(getShipmentInfo.data.shipment.postage_label_png_url);
+          addInfo(orderToBeShipped);
+          setComplete(true);
+        }, 5000);
+      }
+    }
+  };
 
-//   useEffect(() => {
-//     // orderToBeShipped.map((item) => {
-//     //   if(item.item_name.includes("(Pre-order)")) {
-//     //     setPreorder(true)
-//     //   }
-//     // })
-//     if (confirmCreateShipment) {
-//       setChecked(true);
-//     }
-//     if (checked) {
-//       createShipmentFunc(orderToBeShipped);
-//       addInfo(orderToBeShipped);
-//     }
-//     // REMOVE FOR STAGING HERE
-//     if (shipments) {
-//       shipments.data.map((test) => {
-//         if (test.order_id === orderToBeShipped.orderId) {
-//           setNoShow(true);
-//           // if(orderToBeShipped.status == "refunded" || test.status == "refund_approved") {
-//           //   setNoShow(false)
-//           // }
-//         }
-//       });
-//     }
-//   }, [
-//     setRates,
-//     setShipId,
-//     confirmCreateShipment,
-//     setName,
-//     setInvalidRate,
-//     setLoading,
-//     setChecked,
-//     checked,
-//     setComplete,
-//     setNoShow,
-//     noShow,
-//     setConfirm,
-//   ]);
+  useEffect(() => {
+    // Go through all shipments on initial load and update state/render appropriate ui.
+    if (shipments) {
+      shipments.data.map((test) => {
+        if (
+          test.order_id === orderToBeShipped.orderId &&
+          (test.status === "ready" || test.status === "exception")
+        ) {
+          setPrice(test.purchase_amount);
+          setTracking(test.tracking_url);
+          setAlreadyPurchased(true);
+        }
+      });
+    }
+  }, []);
 
-//   if (noShow) {
-//     return (
-//       <div key={orderToBeShipped.orderId} className={`order complete`}>
-//         <span className="date">{orderToBeShipped.acceptedOn.substring(0, orderToBeShipped.acceptedOn.length - 14)}</span>
-//         <p>Name: {orderToBeShipped.shippingAddress.addressee}</p>
-//         <p>Country: {orderToBeShipped.shippingAddress.country}</p>
-//         <div className="flexContainer">
-//           <p>Items</p>
-//           <ul>{item}</ul>
-//         </div>
-//         <button class="tiny-btn" disabled={added} onClick={() => {
-//           shipments.data.map((ship) => {
-//             if(ship.order_id === orderToBeShipped.orderId) {
-//               const getShipmentInfo = getShipment(ship.id);
-//               getShipmentInfo.then((info) => {
-//                 add(info.data.shipment.postage_label_png_url);
-//                 addInfo(orderToBeShipped)
-//                 setAdded(true)
-//               })
-//             }
-//           });
-//         }}>{!added ? 'Add label for download' : 'Added'}</button>
-//       </div>
-//     );
-//   }
+  useEffect(() => {
+    // TODO: Create UI based on whether or not an item is a pre-order.
+    orderToBeShipped.purchasedItems.map((item) => {
+      if (item.variantSKU.includes("PO")) {
+        setPreorder(true);
+      }
+    });
+    // if individual card is checked, shipment is created
+    if (checked) {
+      createShipmentFunc(orderToBeShipped);
+    }
+    // Once shipment is purchased, if shipment checkbox is selected, order will be marked as shipped in bandcamp DB
+    // and customer will get a confirmation email with tracking URL for their package.
+    // if (checkedShip) {
+    //   shipments.data.map(async (shipment) => {
+    //     if (orderToBeShipped[0].payment_id === shipment.order_id) {
+    //       console.log("IT IS SHIPPER");
+    //       // markAsShipped(
+    //       //   token,
+    //       //   orderToBeShipped[0].payment_id,
+    //       //   shipment.tracking_url
+    //       // );
+    //     }
+    //   });
+    // }
+  }, [checked, checkedShip]);
 
-//   if(cannotProcess) {
-//     return (
-//       <div key={orderToBeShipped.orderId} className={`order manual-complete`}>
-//         <span className="date">{orderToBeShipped.acceptedOn.substring(0, orderToBeShipped.acceptedOn.length - 14)}</span>
-//         <p>Name: {orderToBeShipped.shippingAddress.addressee}</p>
-//         <p>Country: {orderToBeShipped.shippingAddress.country}</p>
-//         <div className="flexContainer">
-//           <p>Items</p>
-//           <ul>{item}</ul>
-//         </div>
-//       </div>
-//     );
-//   }
+  if (notificationSent) {
+    return (
+      <div key={orderToBeShipped.orderId} className={`order note-sent`}>
+        <div>
+          <span className="date">
+            <div>
+              {orderToBeShipped.acceptedOn.substring(
+                0,
+                orderToBeShipped.acceptedOn.length - 14
+              )}
+            </div>
+            {orderToBeShipped.orderId}
+            {tracking !== "" && (
+              <a href={tracking} target="_blank" rel="noreferrer">
+                Tracking Url
+              </a>
+            )}
+          </span>
+        </div>
+        <div>
+          <p>{orderToBeShipped.customerInfo.fullName}</p>
+          <p>{orderToBeShipped.billingAddress.country}</p>
+        </div>
+        <div className="flexContainer">
+          <ul>{items}</ul>
+        </div>
+        <div className="buttons">
+          <button className="buttonRounded opacity">Purchased</button>
+          <button className="buttonRounded opacity">Reprint label</button>
+          <button className="buttonRounded button-proc">NOTE SENT</button>
+        </div>
+      </div>
+    );
+  }
 
-//   // if(preorder) {
-//   //   return (
-//   //       <div key={orderToBeShipped.orderId} className={`order blank-out`}>
-//   //         {/* <span className="date">{orderToBeShipped[0].order_date.substring(0, orderToBeShipped[0].order_date.length - 12)}</span> */}
-//   //         <p>Name: {orderToBeShipped.shippingAddress.addressee}</p>
-//   //         <p>Country: {orderToBeShipped.shippingAddress.country}</p>
-//   //         <div className="flexContainer">
-//   //           <p>Items</p>
-//   //           <ul>{item}</ul>
-//   //         </div>
-//   //       </div>
-//   //     );
-//   // }
+  // Loading state
+  if (loading) {
+    return (
+      <div key={orderToBeShipped.orderId} className={`order processing`}>
+        <div>
+          <span className="date">
+            <div>
+              {orderToBeShipped.acceptedOn.substring(
+                0,
+                orderToBeShipped.acceptedOn.length - 14
+              )}
+            </div>
+            {orderToBeShipped.orderId}
+          </span>
+        </div>
+        <div>
+          <p>{orderToBeShipped.customerInfo.fullName}</p>
+          <p>{orderToBeShipped.billingAddress.country}</p>
+        </div>
+        <div className="flexContainer">
+          <ul>{items}</ul>
+        </div>
+        <div className="buttons">
+          <button className="buttonRounded button-proc">Processing</button>
+          <button className="buttonRounded opacity">Reprint label</button>
+          <button className="buttonRounded opacity">Mark Shipped</button>
+        </div>
+      </div>
+    );
+  }
 
-//   if (loading) {
-//     return (
-//       <div className="order">
-//         <img src={Spinner} alt="" />
-//       </div>
-//     )
-//   } else {
-//     return (
-//       <div
-//         key={orderToBeShipped.orderId}
-//         className={`order ${complete ? "complete" : ""} ${checked ? 'pdfReady' : ''}`}
-//       >
-//         <span className="date">{orderToBeShipped.acceptedOn.substring(0, orderToBeShipped.acceptedOn.length - 14)}</span>
-//         <p>Name: {orderToBeShipped.shippingAddress.addressee}</p>
-//         <p>Country: {orderToBeShipped.shippingAddress.country}</p>
-//         <div className="flexContainer">
-//           <ul>{item}</ul>
-//         </div>
-//         <div className="individualShip">
-//           <p className="tinyText">Process Individual Shipment</p>
-//           <input
-//             className="checkbox"
-//             onClick={handleClick}
-//             onChange={() => (confirmCreateShipment = true)}
-//             checked={checked}
-//             type="checkbox"
-//           />
-//         </div>
-//       </div>
-//     );
-//   }
-// };
+  // This is what renders if a shipment cannot be created/errors during shipment creation.
+  if (cannotProcess) {
+    return (
+      <div key={orderToBeShipped.orderId} className={`order manualComplete`}>
+        <span className="date">
+          <div>
+            {orderToBeShipped.acceptedOn.substring(
+              0,
+              orderToBeShipped.acceptedOn.length - 14
+            )}
+          </div>
+          {orderToBeShipped.orderId}
+        </span>
+        <div>
+          <p>{orderToBeShipped.customerInfo.fullName}</p>
+          <p>{orderToBeShipped.billingAddress.country}</p>
+        </div>
+        <div className="flexContainer">
+          <ul>{items}</ul>
+        </div>
+        <div className="buttons">
+          <button className="buttonRounded error-btn">ERROR</button>
+          <button className="buttonRounded opacity">Reprint label</button>
+          <button className="buttonRounded opacity">Mark Shipped</button>
+        </div>
+      </div>
+    );
+  }
 
-// WebflowCard.propTypes = {};
+  return (
+    <div
+      key={orderToBeShipped.orderId}
+      className={`order ${alreadyPurchased && "completeOrder"} ${
+        complete ? "complete" : ""
+      } ${checked ? "pdfReady" : ""} ${preorder ? "blankOut" : ""}`}
+    >
+      <span className="date">
+        <div>
+          {orderToBeShipped.acceptedOn.substring(
+            0,
+            orderToBeShipped.acceptedOn.length - 14
+          )}
+        </div>
+        {orderToBeShipped.orderId}
+        {tracking !== "" && (
+          <a href={tracking} target="_blank" rel="noreferrer">
+            Tracking Url
+          </a>
+        )}
+      </span>
+      {alreadyPurchased && price !== null ? <div>${price}</div> : <div>-</div>}
+      <div className="name">
+        <p>{orderToBeShipped.customerInfo.fullName}</p>
+        <p>{orderToBeShipped.billingAddress.country}</p>
+      </div>
+      <div className="flexContainer">
+        <ul>{items}</ul>
+      </div>
+      <div className="buttons">
+        <button
+          className={`buttonRounded ${
+            alreadyPurchased ? "opacity" : "purchase"
+          }`}
+          onClick={() => handleClick()}
+        >
+          {alreadyPurchased ? "Purchased" : "Purchase Postage"}
+        </button>
+        <button
+          className={`buttonRounded ${
+            alreadyPurchased ? "reprint" : "opacity"
+          }`}
+          disabled={added}
+          onClick={() => {
+            shipments.data.map(async (ship) => {
+              // If the order id matches the payment id we have our shipment.
+              if (
+                ship.order_id === orderToBeShipped.orderId &&
+                ship.status === "ready"
+              ) {
+                const getShipmentInfo = await getShipment(ship.id);
+                // if (getShipmentInfo.data.shipment.status === "ready") {
+                // Update the store with the information for the shipment we want to print the label of.
+                add(getShipmentInfo.data.shipment.postage_label_png_url);
+                addInfo(orderToBeShipped);
+                setAdded(true);
+                // }
+              }
+            });
+          }}
+        >
+          {!added ? "Reprint label" : "Added"}
+        </button>
+        <button
+          className={`buttonRounded ${
+            alreadyPurchased ? "shipped" : "opacity"
+          }`}
+          onClick={() => handleClickShip()}
+        >
+          Mark Shipped
+        </button>
+      </div>
+    </div>
+  );
+};
 
-// export default WebflowCard;
+export default WebflowCard;

@@ -1,5 +1,14 @@
 import React from "react";
-import { Page, Text, View, Document, StyleSheet, Image, PDFDownloadLink, Font } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  Image,
+  PDFDownloadLink,
+  Font,
+} from "@react-pdf/renderer";
 
 const PdfGenerator = ({ errors, urls, info }) => {
   // This component handles generation and download of pdfs/shipping labels
@@ -15,13 +24,41 @@ const PdfGenerator = ({ errors, urls, info }) => {
             <Page style={styles.body}>
               <Image style={styles.image} src={order.url} />
               <Text style={styles.title}>Packing List</Text>
-              {order.map((item) => {
-                if (item.quantity > 1) {
-                  return <Text style={styles.highlight}>{`Quanity: ${item.quantity}, Item: ${item.option !== null ? item.option : ""} - ${item.item_name}`}</Text>;
-                } else {
-                  return <Text style={styles.text}>{`Quanity: ${item.quantity}, Item:  ${item.option !== null ? item.option : ""} - ${item.item_name}`}</Text>;
-                }
-              })}
+              {order.purchasedItems
+                ? order.purchasedItems.map((item) => {
+                    if (item.count > 1) {
+                      return (
+                        <Text
+                          style={styles.highlight}
+                        >{`Quanity: ${item.count}, Item: ${item.variantName}`}</Text>
+                      );
+                    } else {
+                      return (
+                        <Text
+                          style={styles.text}
+                        >{`Quanity: ${item.count}, Item: ${item.variantName}`}</Text>
+                      );
+                    }
+                  })
+                : order.map((item) => {
+                    if (item.quantity > 1) {
+                      return (
+                        <Text style={styles.highlight}>{`Quanity: ${
+                          item.quantity
+                        }, Item: ${item.option !== null ? item.option : ""} - ${
+                          item.item_name
+                        }`}</Text>
+                      );
+                    } else {
+                      return (
+                        <Text style={styles.text}>{`Quanity: ${
+                          item.quantity
+                        }, Item:  ${
+                          item.option !== null ? item.option : ""
+                        } - ${item.item_name}`}</Text>
+                      );
+                    }
+                  })}
             </Page>
           );
         })}
@@ -75,7 +112,9 @@ const PdfGenerator = ({ errors, urls, info }) => {
   return (
     <>
       <PDFDownloadLink document={<PdfIdee />} fileName={`${todayDate}.pdf`}>
-        {({ blob, url, loading, error }) => (loading ? "Loading..." : "Download")}
+        {({ blob, url, loading, error }) =>
+          loading ? "Loading..." : "Download"
+        }
       </PDFDownloadLink>
       <div className="errors">Errors: {errors.length}</div>
     </>

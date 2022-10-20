@@ -1,44 +1,45 @@
-import axios from 'axios'
-
-const token = process.env.REACT_APP_WEBFLOW_API_TOKEN;
-const webflowSiteId = process.env.REACT_APP_WEBFLOW_SITE_ID;
+import axios from "axios";
 
 export const getOrdersUnshippedWebflow = async () => {
-    try {
-      const config = {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'accept-version': '1.0.0'
-       },
-      };
-      const allOrders = await axios.get(
-        `https://api.webflow.com/sites/${webflowSiteId}/orders`,
-        config
-      );
-      const unfulfilled = await allOrders.data.filter(order => order.status === "unfulfilled")
-      return unfulfilled;
-    } catch (error) {
-      console.log(error);
-    }
+  const response = await axios.get(
+    "https://api.webflow.com/sites/5fd7cabbf4d7129fb098a4db/orders?access_token=d6d489cda5a6d6c1b769ac8faf0e47ed66ef8ac3546962f2e859bc69800700f3"
+  );
+  const unfulfilled = await response.data.filter(
+    (order) => order.status === "unfulfilled"
+  );
+  return unfulfilled;
 };
 
-export const markAsShippedWebflow = async (orderId, trackingUrl) => {
+export const markAsShippedWebflow = async (orderId, trackingUrl, url) => {
   try {
-    const config = {
-      headers: { 
-        Authorization: `Bearer ${token}`,
-        'accept-version': '1.0.0'
-     },
-    };
     const params = {
-      sendOrderFulfilledEmail: true
+      sendOrderFulfilledEmail: true,
     };
-    const fulfillOrder = await axios.post(
-      `https://api.webflow.com/sites/${webflowSiteId}/order/${orderId}/fulfill`,
-      params,
-      config
+    console.log(url);
+
+    let headers = new Headers();
+
+    headers.append("Content-Type", "application/json");
+    headers.append("Accept", "application/json");
+    headers.append(
+      "Authorization",
+      "Bearer " +
+        "d6d489cda5a6d6c1b769ac8faf0e47ed66ef8ac3546962f2e859bc69800700f3"
     );
-    return fulfillOrder;
+    headers.append("Origin", "http://localhost:3000");
+
+    fetch(url, {
+      mode: "no-cors",
+      credentials: "include",
+      method: "POST",
+      headers: headers,
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json))
+      .catch((error) => console.log("Authorization failed: " + error.message));
+    // const url = `https://api.webflow.com/sites/5fd7cabbf4d7129fb098a4db/order/${orderId}/fulfill`;
+    // const fulfillOrder = await axios.post(url, params, { json: true });
+    // return fulfillOrder;
   } catch (error) {
     console.log(error);
   }
