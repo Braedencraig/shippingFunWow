@@ -129,7 +129,6 @@ export const createShipment = async (orderToBeShipped) => {
       let tShirtAmount = 0;
       let cassetteAmount = 0;
       orderToBeShipped.map((order) => {
-        console.log(order);
         if (order.sku.indexOf("LP") > -1) {
           vinylAmount += order.quantity;
         } else if (
