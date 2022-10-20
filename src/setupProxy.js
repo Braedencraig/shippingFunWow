@@ -27,7 +27,7 @@ module.exports = function (app) {
     createProxyMiddleware("/clients", {
       changeOrigin: true,
       secure: false,
-      target: "https://staging.chitchats.com/api/v1",
+      target: "https://chitchats.com/api/v1",
     })
   );
 };

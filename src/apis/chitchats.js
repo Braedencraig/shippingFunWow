@@ -1,8 +1,8 @@
 import axios from "axios";
 import axiosWithDelimiterFile from "../apis/axios";
 
-const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET_STAGING;
-const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID_STAGING;
+const chitChatTkn = process.env.REACT_APP_CHITCHATS_API_SECRET;
+const chitChatClientId = process.env.REACT_APP_CHITCHATS_API_CLIENT_ID;
 
 export const createShipment = async (orderToBeShipped) => {
   try {
