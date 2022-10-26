@@ -164,7 +164,7 @@ function App() {
         </Nav>
         <div className="toBeShipped">
           <h2>
-            IF Bandcamp: {unfilledOrders === null ? "" : unfilledOrders.length}{" "}
+            IF Bandcamp: {unfilledOrders === null ? "0" : unfilledOrders.length}{" "}
             orders
           </h2>
           <div className="orderFlex">
@@ -185,7 +185,7 @@ function App() {
           <h2>
             IF Webflow:
             {unfilledOrdersWebflow === null
-              ? ""
+              ? "0"
               : unfilledOrdersWebflow.length}{" "}
             orders
           </h2>
@@ -209,7 +209,7 @@ function App() {
         <div className="toBeShipped">
           <h2>
             Ansible Bandcamp:{" "}
-            {unfilledOrdersTwo === null ? "" : unfilledOrdersTwo.length} orders
+            {unfilledOrdersTwo === null ? "0" : unfilledOrdersTwo.length} orders
           </h2>
           <div className="orderFlex">
             {unfilledOrdersTwo &&

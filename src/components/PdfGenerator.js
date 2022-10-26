@@ -28,15 +28,21 @@ const PdfGenerator = ({ errors, urls, info }) => {
                 ? order.purchasedItems.map((item) => {
                     if (item.count > 1) {
                       return (
-                        <Text
-                          style={styles.highlight}
-                        >{`Quanity: ${item.count}, Item: ${item.variantName}`}</Text>
+                        <Text style={styles.highlight}>{`Quanity: ${
+                          item.count
+                        }, Item: ${item.variantName.replace(
+                          "Physical:",
+                          ""
+                        )}`}</Text>
                       );
                     } else {
                       return (
-                        <Text
-                          style={styles.text}
-                        >{`Quanity: ${item.count}, Item: ${item.variantName}`}</Text>
+                        <Text style={styles.text}>{`Quanity: ${
+                          item.count
+                        }, Item: ${item.variantName.replace(
+                          "Physical:",
+                          ""
+                        )}`}</Text>
                       );
                     }
                   })

@@ -13,10 +13,12 @@ export const createShipment = async (orderToBeShipped) => {
         orderToBeShipped[0].ship_to_country_code === "GR"
       ) {
         return "usps_first_class_package_international_service";
+      } else if (orderToBeShipped[0].ship_to_country_code === "DE") {
+        return "asendia_priority_tracked";
       } else if (orderToBeShipped[0].ship_to_country_code === "CA") {
         return "chit_chats_canada_tracked";
       } else if (orderToBeShipped[0].ship_to_country_code === "US") {
-        return "chit_chats_us_tracked";
+        return "usps_media_mail";
       } else {
         return "chit_chats_international_tracked";
       }
@@ -263,12 +265,18 @@ export const buyShipment = async (shipmentId) => {
 export const createShipmentWebflow = async (orderToBeShipped) => {
   try {
     let postageType = () => {
-      if (orderToBeShipped.shippingAddress.country === "SI") {
+      if (
+        orderToBeShipped.shippingAddress.country === "SI" ||
+        orderToBeShipped.shippingAddress.country === "HR" ||
+        orderToBeShipped.shippingAddress.country === "GR"
+      ) {
         return "usps_first_class_package_international_service";
+      } else if (orderToBeShipped.shippingAddress.country === "DE") {
+        return "asendia_priority_tracked";
       } else if (orderToBeShipped.shippingAddress.country === "CA") {
         return "chit_chats_canada_tracked";
       } else if (orderToBeShipped.shippingAddress.country === "US") {
-        return "chit_chats_us_tracked";
+        return "usps_media_mail";
       } else {
         return "chit_chats_international_tracked";
       }

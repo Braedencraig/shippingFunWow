@@ -54,7 +54,7 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
         <span className={`${item.count > 1 ? "highlight" : ""} quantity`}>
           {item.count}
         </span>
-        {item.variantName}
+        {item.variantName.replace("Physical:", "")}
       </li>
     );
   });
