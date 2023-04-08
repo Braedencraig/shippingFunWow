@@ -22,7 +22,10 @@ const PdfGenerator = ({ errors, urls, info }) => {
         {info.map((order, i) => {
           return (
             <Page style={styles.body}>
-              <Image style={styles.image} src={order.url} />
+              <Image
+                style={styles.image}
+                src={`https://cors-anywhere.herokuapp.com/${order.url}`}
+              />
               <Text style={styles.title}>Packing List</Text>
               {order.purchasedItems
                 ? order.purchasedItems.map((item) => {
