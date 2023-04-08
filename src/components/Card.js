@@ -7,6 +7,7 @@ import { markAsShipped } from "../apis/bandcamp";
 import Spinner from "../logoidee.svg";
 
 const Card = ({ orderToBeShipped, shipments, token }) => {
+  console.log(orderToBeShipped);
   // Initial component state
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -85,7 +86,11 @@ const Card = ({ orderToBeShipped, shipments, token }) => {
       shipments.data.map((test) => {
         if (
           parseInt(test.order_id) === orderToBeShipped[0].payment_id &&
-          (test.status === "ready" || test.status === "exception")
+          (test.status === "ready" ||
+            test.status === "exception" ||
+            test.status === "received" ||
+            test.status === "delivered" ||
+            test.status === "inducted")
         ) {
           setPrice(test.purchase_amount);
           setAlreadyPurchased(true);
@@ -343,7 +348,7 @@ const Card = ({ orderToBeShipped, shipments, token }) => {
               console.log(ship);
               if (
                 parseInt(ship.order_id) === orderToBeShipped[0].payment_id &&
-                ship.status === "ready"
+                (ship.status === "ready" || ship.status === "inducted")
               ) {
                 const getShipmentInfo = await getShipment(ship.id);
                 // if (getShipmentInfo.data.shipment.status === "ready") {

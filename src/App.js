@@ -21,6 +21,9 @@ import "./App.css";
 require("dotenv").config();
 
 function App() {
+  const [loggedIn, isLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   // Setting up initial state
   const [unfilledOrders, setUnfilledOrders] = useState(null);
   const [token, setToken] = useState("");
@@ -33,6 +36,23 @@ function App() {
   const [tokenTwo, setTokenTwo] = useState("");
   // webflow state
   const [unfilledOrdersWebflow, setUnfilledOrdersWebflow] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (
+        username === process.env.REACT_APP_USER &&
+        password === process.env.REACT_APP_PASSWORD
+      ) {
+        console.log("IN HERE?!?!?");
+        isLoggedIn(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log(loggedIn);
 
   // Setting up easy-peasy store to handle info/tracking pngs when creating shipment labels
   const store = createStore({
@@ -156,6 +176,36 @@ function App() {
     );
   }
 
+  if (!loggedIn) {
+    return (
+      <div className="form">
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Log In</button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       <StoreProvider store={store}>
@@ -170,14 +220,16 @@ function App() {
           <div className="orderFlex">
             {unfilledOrders &&
               unfilledOrders.map((orderToBeShipped, idx) => {
-                return (
-                  <Card
-                    key={orderToBeShipped[0].sale_item_id}
-                    orderToBeShipped={orderToBeShipped}
-                    shipments={allShipments}
-                    token={token}
-                  />
-                );
+                if (orderToBeShipped[0].payment_state !== "refunded") {
+                  return (
+                    <Card
+                      key={orderToBeShipped[0].sale_item_id}
+                      orderToBeShipped={orderToBeShipped}
+                      shipments={allShipments}
+                      token={token}
+                    />
+                  );
+                }
               })}
           </div>
         </div>
