@@ -52,7 +52,7 @@ function App() {
     }
   };
 
-  console.log(loggedIn, "asd");
+  console.log(loggedIn, "assd");
 
   // Setting up easy-peasy store to handle info/tracking pngs when creating shipment labels
   const store = createStore({
