@@ -6,14 +6,18 @@ export const getCredentials = async () => {
     const client_secret = process.env.REACT_APP_BANDCAMP_CLIENT_SECRET;
     const dataType = "json";
     const grant_type = "client_credentials";
-    const credentials = await axios.post(`/oauth_token`, null, {
-      params: {
-        client_id,
-        client_secret,
-        dataType,
-        grant_type,
-      },
-    });
+    const credentials = await axios.post(
+      `https://bandcamp.com/oauth_token`,
+      null,
+      {
+        params: {
+          client_id,
+          client_secret,
+          dataType,
+          grant_type,
+        },
+      }
+    );
     if (credentials.status === 200) {
       return credentials;
     }
@@ -29,14 +33,18 @@ export const getCredentialsTwo = async () => {
     const client_secret = process.env.REACT_APP_BANDCAMP_CLIENT_SECRET_TWO;
     const dataType = "json";
     const grant_type = "client_credentials";
-    const credentials = await axios.post(`/oauth_token`, null, {
-      params: {
-        client_id,
-        client_secret,
-        dataType,
-        grant_type,
-      },
-    });
+    const credentials = await axios.post(
+      `https://bandcamp.com/oauth_token`,
+      null,
+      {
+        params: {
+          client_id,
+          client_secret,
+          dataType,
+          grant_type,
+        },
+      }
+    );
     if (credentials.status === 200) {
       return credentials;
     }
@@ -51,7 +59,11 @@ export const getBands = async (token) => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
-    const getBands = await axios.post("/api/account/1/my_bands", null, config);
+    const getBands = await axios.post(
+      "https://bandcamp.com/api/account/1/my_bands",
+      null,
+      config
+    );
     return getBands;
   } catch (error) {
     console.log(error);
@@ -68,7 +80,7 @@ export const getOrdersUnshipped = async (token, bands) => {
       unshipped_only: true,
     };
     const allOrders = await axios.post(
-      "/api/merchorders/3/get_orders",
+      "https://bandcamp.com/api/merchorders/3/get_orders",
       params,
       config
     );
@@ -88,7 +100,7 @@ export const getOrdersUnshippedTwo = async (token, bands) => {
       unshipped_only: true,
     };
     const allOrders = await axios.post(
-      "/api/merchorders/3/get_orders",
+      "https://bandcamp.com/api/merchorders/3/get_orders",
       params,
       config
     );
@@ -114,7 +126,7 @@ export const getOrdersUnshippedTwo = async (token, bands) => {
 //             band_id: bands.data.bands[2].band_id,
 //             start_time: recentDateFrom,
 //         };
-//         const allRecentOrders = await axios.post("/api/merchorders/3/get_orders", params, config);
+//         const allRecentOrders = await axios.post("https://bandcamp.com/api/merchorders/3/get_orders", params, config);
 //         return allRecentOrders;
 //     } catch (error) {
 //         console.log(error);
@@ -138,7 +150,7 @@ export const markAsShipped = async (token, id, trackingUrl) => {
       ],
     };
     const res = await axios.post(
-      "/api/merchorders/2/update_shipped",
+      "https://bandcamp.com/api/merchorders/2/update_shipped",
       params,
       config
     );

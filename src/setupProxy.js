@@ -9,27 +9,27 @@ module.exports = function (app) {
     );
     next();
   });
-  app.use(
-    createProxyMiddleware("/oauth_token", {
-      changeOrigin: true,
-      secure: false,
-      target: "https://bandcamp.com",
-    })
-  );
-  app.use(
-    createProxyMiddleware("/api", {
-      changeOrigin: true,
-      secure: false,
-      target: "https://bandcamp.com",
-    })
-  );
-  app.use(
-    createProxyMiddleware("/webflow", {
-      changeOrigin: true,
-      secure: false,
-      target: "https://api.webflow.com",
-    })
-  );
+  // app.use(
+  //   createProxyMiddleware("/oauth_token", {
+  //     changeOrigin: true,
+  //     secure: false,
+  //     target: "https://bandcamp.com",
+  //   })
+  // );
+  // app.use(
+  //   createProxyMiddleware("/api", {
+  //     changeOrigin: true,
+  //     secure: false,
+  //     target: "https://bandcamp.com",
+  //   })
+  // );
+  // app.use(
+  //   createProxyMiddleware("/webflow", {
+  //     changeOrigin: true,
+  //     secure: false,
+  //     target: "https://api.webflow.com",
+  //   })
+  // );
   // STAGING CHANGE HERE
   // app.use(
   //   createProxyMiddleware("/clients", {
