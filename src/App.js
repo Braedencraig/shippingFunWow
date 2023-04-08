@@ -44,7 +44,7 @@ function App() {
         username === process.env.REACT_APP_USER &&
         password === process.env.REACT_APP_PASSWORD
       ) {
-        console.log("IN HERE?!?!?");
+        console.log("IN HERE?s!?!?");
         isLoggedIn(true);
       }
     } catch (error) {
