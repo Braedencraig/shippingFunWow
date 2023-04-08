@@ -236,6 +236,7 @@ export const getAllShipments = async () => {
         headers: {
           Authorization: chitChatTkn,
           "Access-Control-Allow-Origin": "*",
+          crossorigin: true,
         },
       }
     );
