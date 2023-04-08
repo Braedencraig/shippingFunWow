@@ -44,15 +44,12 @@ function App() {
         username === process.env.REACT_APP_USER &&
         password === process.env.REACT_APP_PASSWORD
       ) {
-        console.log("IN HERE?s!?!?");
         isLoggedIn(true);
       }
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log(loggedIn, "assd");
 
   // Setting up easy-peasy store to handle info/tracking pngs when creating shipment labels
   const store = createStore({
@@ -157,14 +154,14 @@ function App() {
 
   // Bandcamp auth request every once in a while returns a 400, not sure why, but if it does happen
   // a quick refresh sorts it out.
-  if (bandcampError) {
-    window.location.reload();
-    return (
-      <div className="loadingDisplay">
-        <h2>Error with Bandcamp API Secret, Please Refresh</h2>
-      </div>
-    );
-  }
+  // if (bandcampError) {
+  //   window.location.reload();
+  //   return (
+  //     <div className="loadingDisplay">
+  //       <h2>Error with Bandcamp API Secret, Please Refresh</h2>
+  //     </div>
+  //   );
+  // }
 
   // If we have no orders, show loading state
   if (unfilledOrders === null) {
