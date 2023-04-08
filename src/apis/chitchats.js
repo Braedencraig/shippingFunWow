@@ -179,14 +179,14 @@ export const createShipment = async (orderToBeShipped) => {
       postage_type: postage,
     };
 
-    // const res = await axiosWithDelimiterFile.post(`/clients/${chitChatClientId}/shipments`, shipmentBody, {
+    // const res = await axiosWithDelimiterFile.post(`https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`, shipmentBody, {
     //     headers: {
     //         Authorization: chitChatTkn,
     //     },
     // });
 
     const res = await axios.post(
-      `/clients/${chitChatClientId}/shipments`,
+      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
       shipmentBody,
       {
         headers: {
@@ -213,7 +213,7 @@ export const createShipment = async (orderToBeShipped) => {
 export const getShipment = async (id) => {
   try {
     const res = await axios.get(
-      `/clients/${chitChatClientId}/shipments/${id}`,
+      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${id}`,
       {
         headers: {
           Authorization: chitChatTkn,
@@ -230,11 +230,14 @@ export const getShipment = async (id) => {
 
 export const getAllShipments = async () => {
   try {
-    const res = await axios.get(`/clients/${chitChatClientId}/shipments`, {
-      headers: {
-        Authorization: chitChatTkn,
-      },
-    });
+    const res = await axios.get(
+      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+      {
+        headers: {
+          Authorization: chitChatTkn,
+        },
+      }
+    );
     if (res.status === 200) {
       return res;
     }
@@ -246,7 +249,7 @@ export const getAllShipments = async () => {
 export const buyShipment = async (shipmentId) => {
   try {
     const res = await axios.patch(
-      `/clients/${chitChatClientId}/shipments/${shipmentId}/buy`,
+      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${shipmentId}/buy`,
       null,
       {
         headers: {
@@ -446,7 +449,7 @@ export const createShipmentWebflow = async (orderToBeShipped) => {
     };
 
     const res = await axiosWithDelimiterFile.post(
-      `/clients/${chitChatClientId}/shipments`,
+      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
       shipmentBody,
       {
         headers: {

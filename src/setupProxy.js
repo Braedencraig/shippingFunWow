@@ -23,11 +23,11 @@ module.exports = function (app) {
     })
   );
   // STAGING CHANGE HERE
-  app.use(
-    createProxyMiddleware("/clients", {
-      changeOrigin: true,
-      secure: false,
-      target: "https://chitchats.com/api/v1",
-    })
-  );
+  // app.use(
+  //   createProxyMiddleware("/clients", {
+  //     changeOrigin: true,
+  //     secure: false,
+  //     target: "https://chitchats.com/api/v1",
+  //   })
+  // );
 };
