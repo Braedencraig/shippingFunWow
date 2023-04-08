@@ -110,7 +110,7 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
     // TODO: Create UI based on whether or not an item is a pre-order.
     orderToBeShipped.purchasedItems.map((item) => {
       console.log(item, "VARIANTSKU WEB");
-      if (item.variantSKU.includes("PO")) {
+      if (item.variantSKU !== null && item.variantSKU.includes("PO")) {
         setPreorder(true);
       }
     });
