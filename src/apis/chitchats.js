@@ -231,7 +231,7 @@ export const getShipment = async (id) => {
 export const getAllShipments = async () => {
   try {
     const res = await axios.get(
-      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
       {
         headers: {
           Authorization: chitChatTkn,
