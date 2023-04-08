@@ -89,7 +89,7 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
     // Go through all shipments on initial load and update state/render appropriate ui.
     if (shipments) {
       shipments.data.map((test) => {
-        console.log(test, orderToBeShipped[0].payment_id);
+        // console.log(test, orderToBeShipped[0].payment_id);
         // if (
         //   parseInt(test.order_id) === orderToBeShipped[0].payment_id &&
         //   (test.status === "ready" ||
