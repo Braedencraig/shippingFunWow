@@ -31,7 +31,7 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
     setNotificationSent(true);
     shipments.data.map(async (shipment) => {
       if (shipment.order_id === orderToBeShipped.orderId) {
-        const url = `https://api.webflow.com/sites/5fd7cabbf4d7129fb098a4db/order/${orderToBeShipped.orderId}/fulfill?access_token=d6d489cda5a6d6c1b769ac8faf0e47ed66ef8ac3546962f2e859bc69800700f3`;
+        const url = `https://cors-anywhere.herokuapp.com/https://api.webflow.com/sites/5fd7cabbf4d7129fb098a4db/order/${orderToBeShipped.orderId}/fulfill?access_token=d6d489cda5a6d6c1b769ac8faf0e47ed66ef8ac3546962f2e859bc69800700f3`;
         markAsShippedWebflow(
           orderToBeShipped.orderId,
           shipment.tracking_url,

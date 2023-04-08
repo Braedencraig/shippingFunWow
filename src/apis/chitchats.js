@@ -186,7 +186,7 @@ export const createShipment = async (orderToBeShipped) => {
     // });
 
     const res = await axios.post(
-      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
       shipmentBody,
       {
         headers: {
@@ -213,7 +213,7 @@ export const createShipment = async (orderToBeShipped) => {
 export const getShipment = async (id) => {
   try {
     const res = await axios.get(
-      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${id}`,
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${id}`,
       {
         headers: {
           Authorization: chitChatTkn,
@@ -251,7 +251,7 @@ export const getAllShipments = async () => {
 export const buyShipment = async (shipmentId) => {
   try {
     const res = await axios.patch(
-      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${shipmentId}/buy`,
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments/${shipmentId}/buy`,
       null,
       {
         headers: {
@@ -451,7 +451,7 @@ export const createShipmentWebflow = async (orderToBeShipped) => {
     };
 
     const res = await axiosWithDelimiterFile.post(
-      `https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
       shipmentBody,
       {
         headers: {

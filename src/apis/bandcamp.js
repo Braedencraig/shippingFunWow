@@ -7,7 +7,7 @@ export const getCredentials = async () => {
     const dataType = "json";
     const grant_type = "client_credentials";
     const credentials = await axios.post(
-      `https://bandcamp.com/oauth_token`,
+      `https://cors-anywhere.herokuapp.com/https://bandcamp.com/oauth_token`,
       null,
       {
         params: {
@@ -34,7 +34,7 @@ export const getCredentialsTwo = async () => {
     const dataType = "json";
     const grant_type = "client_credentials";
     const credentials = await axios.post(
-      `https://bandcamp.com/oauth_token`,
+      `https://cors-anywhere.herokuapp.com/https://bandcamp.com/oauth_token`,
       null,
       {
         params: {
@@ -60,7 +60,7 @@ export const getBands = async (token) => {
       headers: { Authorization: `Bearer ${token}` },
     };
     const getBands = await axios.post(
-      "https://bandcamp.com/api/account/1/my_bands",
+      "https://cors-anywhere.herokuapp.com/https://bandcamp.com/api/account/1/my_bands",
       null,
       config
     );
@@ -80,7 +80,7 @@ export const getOrdersUnshipped = async (token, bands) => {
       unshipped_only: true,
     };
     const allOrders = await axios.post(
-      "https://bandcamp.com/api/merchorders/3/get_orders",
+      "https://cors-anywhere.herokuapp.com/https://bandcamp.com/api/merchorders/3/get_orders",
       params,
       config
     );
@@ -100,7 +100,7 @@ export const getOrdersUnshippedTwo = async (token, bands) => {
       unshipped_only: true,
     };
     const allOrders = await axios.post(
-      "https://bandcamp.com/api/merchorders/3/get_orders",
+      "https://cors-anywhere.herokuapp.com/https://bandcamp.com/api/merchorders/3/get_orders",
       params,
       config
     );
@@ -126,7 +126,7 @@ export const getOrdersUnshippedTwo = async (token, bands) => {
 //             band_id: bands.data.bands[2].band_id,
 //             start_time: recentDateFrom,
 //         };
-//         const allRecentOrders = await axios.post("https://bandcamp.com/api/merchorders/3/get_orders", params, config);
+//         const allRecentOrders = await axios.post("https://cors-anywhere.herokuapp.com/https://bandcamp.com/api/merchorders/3/get_orders", params, config);
 //         return allRecentOrders;
 //     } catch (error) {
 //         console.log(error);
@@ -150,7 +150,7 @@ export const markAsShipped = async (token, id, trackingUrl) => {
       ],
     };
     const res = await axios.post(
-      "https://bandcamp.com/api/merchorders/2/update_shipped",
+      "https://cors-anywhere.herokuapp.com/https://bandcamp.com/api/merchorders/2/update_shipped",
       params,
       config
     );
