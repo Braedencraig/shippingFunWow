@@ -2,7 +2,13 @@ const createProxyMiddleware = require("http-proxy-middleware");
 const cors = require("cors");
 
 module.exports = function (app) {
-  app.use(cors());
+  // app.use(cors());
+  app.use(
+    cors({
+      credentials: true,
+      origin: "https://magenta-biscotti-a65150.netlify.app",
+    })
+  );
   // app.use(function (request, response, next) {
   //   response.header("Access-Control-Allow-Origin", "*");
   //   response.header(
