@@ -45,6 +45,8 @@ function App() {
         password === process.env.REACT_APP_PASSWORD
       ) {
         isLoggedIn(true);
+        console.log(username, password);
+        localStorage.setItem("user", `${username}`);
       }
     } catch (error) {
       console.error(error);
@@ -91,7 +93,8 @@ function App() {
       const clientCredsTwo = await getCredentialsTwo();
 
       if (clientCreds === "error" || clientCredsTwo === "error") {
-        setBandcampError(true);
+        // setBandcampError(true);
+        alert("REFRESH THE PAGE");
       } else {
         const accessTkn = clientCreds?.data.access_token;
         setToken(accessTkn);
@@ -147,6 +150,12 @@ function App() {
 
         const webflowOrders = await getOrdersUnshippedWebflow();
         setUnfilledOrdersWebflow(webflowOrders);
+
+        const user = localStorage.getItem("user");
+
+        if (user === process.env.REACT_APP_USER) {
+          isLoggedIn(true);
+        }
       }
     }
     fetchData();
