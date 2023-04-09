@@ -11,7 +11,7 @@ import {
 } from "@react-pdf/renderer";
 
 const PdfGenerator = ({ errors, urls, info }) => {
-  // This component handles generation and download of pdfs/shipping labels
+  // This component handles generation and download of pdfs/shipping slabels
   info.map((order, i) => {
     order.url = urls[i];
   });
