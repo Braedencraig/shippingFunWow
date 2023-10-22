@@ -185,26 +185,26 @@ export const createShipment = async (orderToBeShipped) => {
     //     },
     // });
 
-    // const res = await axios.post(
-    //   `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
-    //   shipmentBody,
-    //   {
-    //     headers: {
-    //       Authorization: chitChatTkn,
-    //     },
-    //   }
-    // );
+    const res = await axios.post(
+      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+      shipmentBody,
+      {
+        headers: {
+          Authorization: chitChatTkn,
+        },
+      }
+    );
 
-    // if (res.status === 201) {
-    //   return {
-    //     id: res.data.shipment.id,
-    //     tracking: res.data.shipment.tracking_url,
-    //     rates: res.data.shipment.rates,
-    //     name: orderToBeShipped[0].ship_to_name,
-    //   };
-    // } else {
-    //   return "Something went wrong";
-    // }
+    if (res.status === 201) {
+      return {
+        id: res.data.shipment.id,
+        tracking: res.data.shipment.tracking_url,
+        rates: res.data.shipment.rates,
+        name: orderToBeShipped[0].ship_to_name,
+      };
+    } else {
+      return "Something went wrong";
+    }
   } catch (error) {
     console.log(error);
   }
