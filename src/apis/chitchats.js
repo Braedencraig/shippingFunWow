@@ -131,7 +131,15 @@ export const createShipment = async (orderToBeShipped) => {
       let tShirtAmount = 0;
       let cassetteAmount = 0;
       orderToBeShipped.map((order) => {
-        if (order.sku.indexOf("LP") > -1) {
+        const skusToIgnre = [
+          "BW-RWM-LE12",
+          "BW-RWM-LE12-PO",
+          "IEFR-P-V12",
+          "IEFR-LAMH-RV12",
+          "IEFR-FW-V12",
+          "IEFR-MS-12VW",
+        ];
+        if (order.sku.indexOf("LP") > -1 || skusToIgnre.includes(order.sku)) {
           vinylAmount += order.quantity;
         } else if (
           order.item_name.indexOf("T-Shirt") > -1 ||
