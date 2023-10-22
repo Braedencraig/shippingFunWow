@@ -34,15 +34,15 @@ export const createShipment = async (orderToBeShipped) => {
     let sizeZ;
 
     const description = orderToBeShipped.map((order) => {
-      // if (order.item_name.indexOf("Vinyl") > -1) {
-      //     vinyl = true;
-      // } else if (order.item_name.indexOf("T-Shirt") > -1 || order.item_name.indexOf("T-shirt") > -1) {
-      //     tshirt = true;
-      // } else if (order.item_name.indexOf("Cassette") > -1) {
-      //     cassette = true;
-      // }
-
-      if (order.sku.indexOf("LP") > -1) {
+      const skusToIgnre = [
+        "BW-RWM-LE12",
+        "BW-RWM-LE12-PO",
+        "IEFR-P-V12",
+        "IEFR-LAMH-RV12",
+        "IEFR-FW-V12",
+        "IEFR-MS-12VW",
+      ];
+      if (order.sku.indexOf("LP") > -1 || skusToIgnre.includes(order.sku)) {
         vinyl = true;
       } else if (
         order.item_name.indexOf("T-Shirt") > -1 ||
@@ -185,26 +185,26 @@ export const createShipment = async (orderToBeShipped) => {
     //     },
     // });
 
-    const res = await axios.post(
-      `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
-      shipmentBody,
-      {
-        headers: {
-          Authorization: chitChatTkn,
-        },
-      }
-    );
+    // const res = await axios.post(
+    //   `https://cors-anywhere.herokuapp.com/https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`,
+    //   shipmentBody,
+    //   {
+    //     headers: {
+    //       Authorization: chitChatTkn,
+    //     },
+    //   }
+    // );
 
-    if (res.status === 201) {
-      return {
-        id: res.data.shipment.id,
-        tracking: res.data.shipment.tracking_url,
-        rates: res.data.shipment.rates,
-        name: orderToBeShipped[0].ship_to_name,
-      };
-    } else {
-      return "Something went wrong";
-    }
+    // if (res.status === 201) {
+    //   return {
+    //     id: res.data.shipment.id,
+    //     tracking: res.data.shipment.tracking_url,
+    //     rates: res.data.shipment.rates,
+    //     name: orderToBeShipped[0].ship_to_name,
+    //   };
+    // } else {
+    //   return "Something went wrong";
+    // }
   } catch (error) {
     console.log(error);
   }

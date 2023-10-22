@@ -7,8 +7,8 @@ import { markAsShipped } from "../apis/bandcamp";
 import Spinner from "../logoidee.svg";
 
 const Card = ({ orderToBeShipped, shipments, token }) => {
-  console.log(orderToBeShipped);
   // Initial component state
+  console.log(orderToBeShipped[0].sku, orderToBeShipped[0].buyer_name);
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
   const [checkedShip, setCheckedShip] = useState(false);
