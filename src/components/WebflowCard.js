@@ -11,6 +11,7 @@ import { markAsShippedWebflow } from "../apis/webflow";
 import Spinner from "../logoidee.svg";
 
 const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
+  console.log(orderToBeShipped, "asdasdasd");
   // Initial component state
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -89,6 +90,18 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
     // Go through all shipments on initial load and update state/render appropriate ui.
     if (shipments) {
       shipments.data.map((test) => {
+        // console.log(test, orderToBeShipped[0], "ASDF");
+        if (
+          test.order_id === orderToBeShipped.orderId &&
+          (test.status === "ready" ||
+            test.status === "exception" ||
+            test.status === "received" ||
+            test.status === "delivered" ||
+            test.status === "inducted")
+        ) {
+          setPrice(test.purchase_amount);
+          setAlreadyPurchased(true);
+        }
         // console.log(test, orderToBeShipped[0].payment_id);
         // if (
         //   parseInt(test.order_id) === orderToBeShipped[0].payment_id &&
@@ -109,7 +122,6 @@ const WebflowCard = ({ orderToBeShipped, shipments, token }) => {
   useEffect(() => {
     // TODO: Create UI based on whether or not an item is a pre-order.
     orderToBeShipped.purchasedItems.map((item) => {
-      console.log(item, "VARIANTSKU WEB");
       if (item.variantSKU !== null && item.variantSKU.includes("PO")) {
         setPreorder(true);
       }
