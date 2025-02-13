@@ -185,6 +185,7 @@ export const createShipment = async (orderToBeShipped) => {
       insurance_requested: "no",
       ship_date: "today",
       postage_type: postage,
+      origin_country: "CA",
     };
 
     // const res = await axiosWithDelimiterFile.post(`https://chitchats.com/api/v1/clients/${chitChatClientId}/shipments`, shipmentBody, {
