@@ -189,8 +189,8 @@ export const createShipment = async (orderToBeShipped) => {
         {
           quantity: orderToBeShipped[0].quantity,
           description: description.slice(-1)[0],
-          value: totalAmount,
-          value_currency: orderToBeShipped[0].currency,
+          value_amount: totalAmount,
+          currency_code: orderToBeShipped[0].currency,
           origin_country: "CA",
         },
       ],
